@@ -3,6 +3,7 @@ using OJTBatch1DotNetCore.ConeAppHttpClientExample;
 
 public class Program
 {
+    public static string _blogURL = "https://ojtbatch1.bsite.net/api/Blog";
     public static async Task Main(string[] args)
     {
         await FetchData();
@@ -11,7 +12,7 @@ public class Program
     {
         // http client (axios or fetch)
         HttpClient client = new();
-        var response = await client.GetAsync("https://ojtbatch1.bsite.net/api/Blog");
+        var response = await client.GetAsync(_blogURL);
         if (response.IsSuccessStatusCode)
         {
             string jsonStr = await response.Content.ReadAsStringAsync();
