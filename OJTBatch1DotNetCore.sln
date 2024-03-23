@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.Console
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.ConsoleAppDay2", "OJTBatch1DotNetCore.ConsoleAppDay2\OJTBatch1DotNetCore.ConsoleAppDay2.csproj", "{1C6FFBE6-6768-4004-86FE-3A8B6A4938F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OJTBatch1DotNetCore.ConsoleAppDay3", "OJTBatch1DotNetCore.ConsoleAppDay3\OJTBatch1DotNetCore.ConsoleAppDay3.csproj", "{CF8683A9-38B1-4F6C-B87F-A2304993D08B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.ConsoleAppDay3", "OJTBatch1DotNetCore.ConsoleAppDay3\OJTBatch1DotNetCore.ConsoleAppDay3.csproj", "{CF8683A9-38B1-4F6C-B87F-A2304993D08B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OJTBatch1DotNetCore.ConeAppHttpClientExample", "OJTBatch1DotNetCore.ConeAppHttpClientExample\OJTBatch1DotNetCore.ConeAppHttpClientExample.csproj", "{6F817EF5-3E04-4A1F-9481-42DC1DB29A17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.ConeAppHttpClientExample", "OJTBatch1DotNetCore.ConeAppHttpClientExample\OJTBatch1DotNetCore.ConeAppHttpClientExample.csproj", "{6F817EF5-3E04-4A1F-9481-42DC1DB29A17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OJTBatch1DotNetCore.ConsoleAppDay4", "OJTBatch1DotNetCore.ConsoleAppDay4\OJTBatch1DotNetCore.ConsoleAppDay4.csproj", "{AD2D115E-5C08-4CEE-83F0-C7400DC8C46A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6F817EF5-3E04-4A1F-9481-42DC1DB29A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F817EF5-3E04-4A1F-9481-42DC1DB29A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F817EF5-3E04-4A1F-9481-42DC1DB29A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD2D115E-5C08-4CEE-83F0-C7400DC8C46A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD2D115E-5C08-4CEE-83F0-C7400DC8C46A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD2D115E-5C08-4CEE-83F0-C7400DC8C46A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD2D115E-5C08-4CEE-83F0-C7400DC8C46A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
