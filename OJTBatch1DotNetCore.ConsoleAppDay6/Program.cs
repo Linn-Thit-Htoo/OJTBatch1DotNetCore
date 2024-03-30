@@ -51,7 +51,6 @@ public class Program
         {
             Console.WriteLine(item);
         }
-
         //Console.WriteLine(animal._name);
         //Count count = new();
         //count._count += 1;
