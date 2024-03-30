@@ -1,0 +1,202 @@
+visual studio => https://visualstudio.microsoft.com/downloads/
+SQL server => https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+SSMS => https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16
+
+LTHDotNetCore
+THTZDotNetCore
+OJTBatch1DotNetCore
+
+naming
+variable => camelCase (userName, email, employeeAddress)
+    => global => _userName
+PascalCase => (WriteLine, UserName)
+snake_case (user_id, user_name)
+
+api integration
+
+api integration => JSON
+api endpoint => /api/Blog
+http method => get, post (create), put (update), patch, delete
+http status codes =>
+
+200 - OK (get endpoint)
+201 - Created (post)
+202 - Accepted (update)
+400 - Bad Request (client error)
+404 - Not Found
+409 - Conflict
+500 - Server Error
+
+https://fakestoreapi.com/
+
+https://localhost:7279/api/Blog => get method => get data
+https://localhost:7279/api/Blog => post method => insert data
+https://localhost:7279/api/Blog => put method => data update
+
+
+********** Day 2 **********
+void => return type => no return
+
+concatenate
+string interpolation
+
+operators
+
++, -, *, /, %
+=, +=
+comparison => ==, ===, !=, >, < (== value & data type & value => ===)
+logical operators => &&, ||, ! 
+
+x += 1; (x = x + 1)
+
+http methods => post, put, delete, get, patch
+http status codes => 200, 201, 202, 400
+
+http & https
+
+https => more secure => SSL/TLS => E2EE (end-to-end encryption)
+
+1. requst to communicate (SYN)
+2. SYN-ACK
+3. ACK
+
+TCP handshake
+1. Can we talk ?
+2. Sure (ACK)
+3. So we are talking now (SYN-ACK)
+
+1. TCP handshake
+2. check server authentication (SSL)
+3. client creates random key (session key)
+4. client encrypt (unreadable format)
+5. send back to server
+6. server decrypts using private key
+
+- request 
+- response
+
+(latency || roundtrip)
+
+api => application programming interface (client to server && server to server)
+
+
+********** Day 4 **********
+
+HW => break & continue keywords
+
+git => version control system (.git tracking)
+
+1. staging environment
+2. commit (local commit)
+3. link with remote server
+4. remote server (push)
+
+-- for mac => homebrew install git
+
+git --version
+git -v
+
+git config --global user.name = 
+git config --global user.email = 
+
+git config --global user.name
+git config --global user.email
+
+
+1. git init
+2. staging environment (git add .)
+3. commit stage (git commit -m "")
+4. remote server (git push -u origin master)
+
+- git log --oneline
+- git status
+
+branch (master branch => default)
+
+- app
+- development
+- production
+
+branch merge
+
+linnthit.vercel.com
+
+1. git init
+2. git add . (all files in current project)
+3. git commit (local commit)
+4. git remote add origin https://github.com/Linn-Thit-Htoo/OJT-B1-git-testing.git
+5. git push -u origin master (app, prod)
+
+********** Day 5 **********
+
+static => static to static (object reference)
+non static => static, non static
+
+static => ClassName.static_value (ClassName.MethodName)
+
+
+0, 1
+
+output => 0, 1, 1, 2, 3, 5, 8, 13, 21, 34
+
+********** Day 6 **********
+
+method overloading
+
+1. same method name, different number of params
+2. same method name, same params, different data types
+
+OOP
+
+variables => class fields or property (access modifier)
+
+functions => methods
+
+static, non static
+
+quiz => [10, 21, 19, 2, 5, 1, 7, 90]; // 8:40
+
+int[] nums = { 10, 21, 19, 2, 5, 1, 7, 90 } total sum
+
+stack => LIFO (last in first out) 
+queue => FIFO (first in first out)
+
+window form app => Rental (Book)
+MVC web app => 
+REST api => Personal wallet
+
+
+********** Day 7 **********
+
+access modifiers
+
+1. public => accessible
+2. private => within the class
+3. protected => within the class or subclass (derived class / child class)
+
+Polymorphism
+
+1. compile time polymorphism or method overloading
+2. runtime polymorphism or method overriding
+
+Encapsulation
+
+- getter
+- setter (manual setter, constructor setter(readonly))
+
+Quiz 1
+
+- accpets name from user input
+- reverse that string (Hello => olleH)
+- no using build-in method
+
+// HTZ option 1
+
+// 4, 3, 2, 1
+
+- 3, 4, 2, 1
+- 3, 2, 4, 1
+- 2, 3, 4, 1
+- 2, 3, 1, 4
+- 2, 1, 3, 4
+- 1, 2, 3, 4
