@@ -267,3 +267,5 @@ int => int
 bigint => long (length)
 
 ADO .NET => ActiveX Data Object
+
+User => reserved keyword
