@@ -1,9 +1,11 @@
+using System.Data;
+using System.Data.SqlClient;
+
 namespace LoginFormProject
 {
     public partial class Form1 : Form
     {
-        public string _email = "linnthit77387@gmail.com";
-        public string _password = "123123";
+        public string _connectionStr = "Data Source=(local);Initial Catalog=OJT-Batch1;Integrated Security=True";
 
         public Form1()
         {
@@ -23,7 +25,25 @@ namespace LoginFormProject
                     return;
                 }
 
-                if (email.Equals(_email) && password.Equals(_password)) // Equals ==
+                SqlConnection conn = new(_connectionStr);
+                conn.Open();
+                string query = @"SELECT [UserId]
+      ,[UserName]
+      ,[Email]
+      ,[IsActive]
+  FROM [dbo].[Users] WHERE Email = @Email AND Password = @Password AND IsActive = @IsActive";
+                SqlCommand cmd = new(query, conn);
+
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Password", password);
+                cmd.Parameters.AddWithValue("@IsActive", true);
+
+                SqlDataAdapter adapter = new(cmd);
+                DataTable dt = new();
+                adapter.Fill(dt);
+                conn.Close();
+
+                if (dt.Rows.Count > 0)
                 {
                     MessageBox.Show("Login Successful.", "Information!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;

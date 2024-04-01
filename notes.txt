@@ -240,3 +240,30 @@ window form
 - button => btnLogin, btnCreate, btnLogout, btnUpdate
 - data grid view => dgv1
 - combo box (dropdown) => cbo1, cbo2
+
+
+********** Day 9 **********
+
+SQL => Structured Query Language
+db => SQL, Oracle, MongoDb, Postgresql, sqlite
+RDBMS => mysql, ssms, db browser for sqlite, azure data studio
+
+
+app level => server level => api level => db level
+
+app level => back end level => db level
+
+status code => 404 or 409 (Conflict)
+message => User with this email already exists!
+
+solution:
+
+- new column => IsActive
+- insert => true
+- delete => false
+- select => IsActive == true
+
+int => int
+bigint => long (length)
+
+ADO .NET => ActiveX Data Object
