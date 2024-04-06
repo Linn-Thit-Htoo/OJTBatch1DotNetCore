@@ -269,3 +269,31 @@ bigint => long (length)
 ADO .NET => ActiveX Data Object
 
 User => reserved keyword
+
+********** Day 10 **********
+
+- window form project started
+
+- standalone app
+
+project features
+
+- asset management
+- user management
+- admin login
+- borrow => date, user ID, return date, asset ID
+
+Tables
+
+- Users
+- Asset
+- Category
+- Asset_Category
+- Borrow
+- Borrow Detail
+
+
+=> admin login
+=> user fetch
+=> dashboard landing page
+=> create new user (including testing duplicate)
