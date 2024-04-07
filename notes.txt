@@ -279,7 +279,8 @@ User => reserved keyword
 project features
 
 - asset management
-- user management
+- category management
+- user management [x]
 - admin login
 - borrow => date, user ID, return date, asset ID
 
@@ -297,3 +298,8 @@ Tables
 => user fetch
 => dashboard landing page
 => create new user (including testing duplicate)
+
+********** Day 11 **********
+
+=> edit user
+=> delete user

@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            btnBack = new Button();
             btnCreate = new Button();
             txtPhoneNumber = new TextBox();
             txtUserName = new TextBox();
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
-            btnBack = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -52,6 +52,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1061, 575);
             panel1.TabIndex = 0;
+            // 
+            // btnBack
+            // 
+            btnBack.Location = new Point(67, 22);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(105, 44);
+            btnBack.TabIndex = 8;
+            btnBack.Text = "Back";
+            btnBack.UseVisualStyleBackColor = true;
+            btnBack.Click += btnBack_Click;
             // 
             // btnCreate
             // 
@@ -102,21 +112,11 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Cambria", 25.8000011F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
-            label1.Location = new Point(404, 9);
+            label1.Location = new Point(410, 14);
             label1.Name = "label1";
             label1.Size = new Size(251, 52);
             label1.TabIndex = 2;
             label1.Text = "Create User";
-            // 
-            // btnBack
-            // 
-            btnBack.Location = new Point(67, 22);
-            btnBack.Name = "btnBack";
-            btnBack.Size = new Size(105, 44);
-            btnBack.TabIndex = 8;
-            btnBack.Text = "Back";
-            btnBack.UseVisualStyleBackColor = true;
-            btnBack.Click += btnBack_Click;
             // 
             // CreateNewUserForm
             // 
