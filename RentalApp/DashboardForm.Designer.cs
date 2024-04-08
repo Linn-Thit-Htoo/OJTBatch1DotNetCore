@@ -66,6 +66,7 @@
             categoryManagementToolStripMenuItem.Name = "categoryManagementToolStripMenuItem";
             categoryManagementToolStripMenuItem.Size = new Size(175, 24);
             categoryManagementToolStripMenuItem.Text = "Category Management";
+            categoryManagementToolStripMenuItem.Click += categoryManagementToolStripMenuItem_Click;
             // 
             // assetManagementToolStripMenuItem
             // 

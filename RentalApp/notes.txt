@@ -306,3 +306,4 @@ Tables
 
 ********** Day 12 **********
 
+[x] Category Management

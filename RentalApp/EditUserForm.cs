@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
 
 namespace RentalApp
 {

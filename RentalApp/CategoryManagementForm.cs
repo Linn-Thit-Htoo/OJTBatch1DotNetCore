@@ -3,28 +3,26 @@ using System.Data.SqlClient;
 
 namespace RentalApp
 {
-    public partial class UserManagementForm : Form
+    public partial class CategoryManagementForm : Form
     {
-        public UserManagementForm()
+        public CategoryManagementForm()
         {
             InitializeComponent();
         }
 
-        private void UserManagementForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void UserManagementForm_Load(object sender, EventArgs e)
+        private void CategoryManagementForm_Load(object sender, EventArgs e)
         {
             try
             {
                 FetchData();
+
+                DataGridViewButtonColumn editBtn = new()
+                {
+                    Text = "Edit",
+                    UseColumnTextForButtonValue = true
+                };
+                editBtn.DefaultCellStyle.BackColor = Color.Green;
+                dgv1.Columns.Add(editBtn);
 
                 DataGridViewButtonColumn deleteBtn = new()
                 {
@@ -33,6 +31,7 @@ namespace RentalApp
                 };
                 deleteBtn.DefaultCellStyle.BackColor = Color.Red;
                 dgv1.Columns.Add(deleteBtn);
+
             }
             catch (Exception ex)
             {
@@ -40,36 +39,43 @@ namespace RentalApp
             }
         }
 
-        private void btnCreate_Click(object sender, EventArgs e)
+        private void CategoryManagementForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            CreateNewUserForm createNewUserForm = new();
-            createNewUserForm.Show();
-            this.Hide();
+            Application.Exit();
         }
 
-        private void btnEdit_Click(object sender, EventArgs e)
+        private void btnCreate_Click(object sender, EventArgs e)
         {
-            EditUserForm editUserForm = new();
-            editUserForm.Show();
+            CreateCategoryForm createCategoryForm = new();
+            createCategoryForm.Show();
             this.Hide();
         }
 
         private void dgv1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 6)
+            long id = Convert.ToInt64(dgv1.Rows[e.RowIndex].Cells[0].Value);
+            if (e.ColumnIndex == 3)
             {
-                try
+                // edit case
+                string categoryName = Convert.ToString(dgv1.Rows[e.RowIndex].Cells[1].Value)!;
+                EditCategoryForm editCategoryForm = new(id, categoryName);
+                editCategoryForm.Show();
+                this.Hide();
+            }
+            if (e.ColumnIndex == 4)
+            {
+                // delete case
+                DialogResult dialog = MessageBox.Show("Are you sure you want to delete?", "Warning!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (dialog == DialogResult.OK)
                 {
-                    DialogResult dialog = MessageBox.Show("Are you sure you want to delete?", "Warning!", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                    if (dialog == DialogResult.OK)
+                    try
                     {
-                        long id = Convert.ToInt64(dgv1.Rows[e.RowIndex].Cells[0].Value);
                         SqlConnection conn = new(GetConnectionString._connStr);
                         conn.Open();
-                        string query = @"UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
+                        string query = @"UPDATE Category SET IsActive = @IsActive WHERE CategoryId = @CategoryId";
                         SqlCommand cmd = new(query, conn);
                         cmd.Parameters.AddWithValue("@IsActive", false);
-                        cmd.Parameters.AddWithValue("@UserId", id);
+                        cmd.Parameters.AddWithValue("@CategoryId", id);
                         int result = cmd.ExecuteNonQuery();
                         conn.Close();
 
@@ -81,10 +87,10 @@ namespace RentalApp
                         }
                         MessageBox.Show("Deleting Fail!", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
                 }
             }
         }
@@ -92,7 +98,7 @@ namespace RentalApp
         {
             try
             {
-                DataTable dt = GetData.Fetch("Users");
+                DataTable dt = GetData.Fetch("Category");
                 dgv1.DataSource = dt;
             }
             catch (Exception ex)

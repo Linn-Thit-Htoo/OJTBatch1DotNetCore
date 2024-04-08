@@ -23,5 +23,12 @@
         {
             Application.Exit();
         }
+
+        private void categoryManagementToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CategoryManagementForm categoryManagementForm = new();
+            categoryManagementForm.Show();
+            this.Hide();
+        }
     }
 }
