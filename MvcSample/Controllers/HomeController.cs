@@ -15,6 +15,7 @@ namespace MvcSample.Controllers
 
         public IActionResult Index()
         {
+
             return View();
         }
 
