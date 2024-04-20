@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Create Category";
+}
+
+<h1>Create Category</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Create New Category</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/Category/Create">
+                        <label>Category Name: </label>
+                        <input class="form-control" type="text" required name="CategoryName" />
+                        <br />
+                        <button class="btn btn-outline-info" type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

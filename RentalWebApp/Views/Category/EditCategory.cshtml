@@ -1,0 +1,36 @@
+﻿@using RentalWebApp.Models.Entities;
+@model CategoryDataModel;
+
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<h1>Edit Category</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Edit Category</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model is not null)
+                    {
+                        <form method="post" action="/Category/Update">
+                            <input value="@Model.CategoryId" name="CategoryId" type="hidden" />
+                            <label>Category Name: </label>
+                            <input class="form-control" type="text" required name="CategoryName" value="@Model.CategoryName" />
+                            <br />
+                            <button class="btn btn-outline-info" type="submit">Save</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <h3>No data found.</h3>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

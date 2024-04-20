@@ -1,15 +1,15 @@
-﻿@using RentalWebApp.Models.ResponseModels;
-@model List<UserResponseModel>;
+﻿@using RentalWebApp.Models.Entities;
+@model List<CategoryDataModel>;
 
 @{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "Category Management";
     var success = TempData["success"];
     var error = TempData["error"];
 }
 
-<h1>User Management</h1>
+<h1>Category Management</h1>
 
-<a class="btn btn-outline-primary my-3" href="/User/CreateUser">Create</a>
+<a class="btn btn-outline-primary my-3" href="/Category/CreateCategory">Create</a>
 
 @if (success is not null)
 {
@@ -28,10 +28,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>User Name</th>
-            <th>Phone Number</th>
-            <th>User Role</th>
-            <th>Is Active</th>
+            <th scope="col">Category ID</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Is Active</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -39,13 +38,12 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.UserName</td>
-                <td>@item.PhoneNumber</td>
-                <td>@item.UserRole</td>
+                <td>@item.CategoryId</td>
+                <td>@item.CategoryName</td>
                 <td>@item.IsActive</td>
                 <td>
-                    <a class="btn btn-outline-success" href="/User/EditUser/@item.UserId">Edit</a>
-                    <button class="btn btn-outline-danger" onclick="btnDelete('@item.UserId')">Delete</button>
+                    <a class="btn btn-outline-success" href="/Category/EditCategory/@item.CategoryId">Edit</a>
+                    <button class="btn btn-outline-danger" onclick="btnDelete('@item.CategoryId')">Delete</button>
                 </td>
             </tr>
         }
@@ -59,7 +57,7 @@
                 return;
 
             if (window.confirm("Are you sure you want to delete?")) {
-                window.location.href = `/User/Delete?id=${id}`;
+                window.location.href = `/Category/Delete?id=${id}`;
             }
         }
     </script>
