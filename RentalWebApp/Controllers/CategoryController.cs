@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Features;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
 using RentalWebApp.Models.RequestModels;
+using RentalWebApp.Services;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -73,14 +71,14 @@ namespace RentalWebApp.Controllers
                     return RedirectToAction("CategoryManagement");
                 }
 
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
+                // create case
                 string query = @"INSERT INTO Category (CategoryName, IsActive) VALUES (@CategoryName, @IsActive)";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@CategoryName", requestModel.CategoryName);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                int result = cmd.ExecuteNonQuery();
-                conn.Close();
+                List<SqlParameter> createParams = new()
+                {
+                    new("@CategoryName", requestModel.CategoryName),
+                    new("@IsActive", true)
+                };
+                int result = DbHelper.Execute(query, createParams.ToArray());
 
                 if (result > 0)
                 {
@@ -152,15 +150,15 @@ namespace RentalWebApp.Controllers
                     return RedirectToAction("CategoryManagement");
                 }
 
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
+                // update case
                 string query = @"UPDATE Category SET CategoryName = @CategoryName
 WHERE CategoryId = @CategoryId";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@CategoryId", requestModel.CategoryId);
-                cmd.Parameters.AddWithValue("@CategoryName", requestModel.CategoryName);
-                int result = cmd.ExecuteNonQuery();
-                conn.Close();
+                List<SqlParameter> updateParams = new()
+                {
+                    new("@CategoryName", requestModel.CategoryName),
+                    new("@CategoryId", requestModel.CategoryId)
+                };
+                int result = DbHelper.Execute(query, updateParams.ToArray());
 
                 if (result > 0)
                 {
@@ -183,15 +181,22 @@ WHERE CategoryId = @CategoryId";
         {
             try
             {
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
+                string query1 = @"SELECT AssetId, CategoryId, AssetName FROM Asset WHERE CategoryId = @CategoryId";
+                DataTable dt1 = DbHelper.Query(query1, new SqlParameter("@CategoryId", id));
+                if (dt1.Rows.Count > 0)
+                {
+                    TempData["error"] = "Cannot Delete!";
+                    return RedirectToAction("CategoryManagement");
+                }
+
                 string query = @"UPDATE Category SET IsActive = @IsActive
 WHERE CategoryId = @CategoryId";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@CategoryId", id);
-                cmd.Parameters.AddWithValue("@IsActive", false);
-                int result = cmd.ExecuteNonQuery();
-                conn.Close();
+                List<SqlParameter> deleteParams = new()
+                {
+                    new("@IsActive", false),
+                    new("@CategoryId", id)
+                };
+                int result = DbHelper.Execute(query, deleteParams.ToArray());
 
                 if (result > 0)
                 {

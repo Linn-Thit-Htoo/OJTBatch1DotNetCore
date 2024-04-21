@@ -1,0 +1,43 @@
+﻿@using RentalWebApp.Models.Entities;
+@model List<CategoryDataModel>;
+
+@{
+    ViewData["Title"] = "Create Asset";
+}
+
+<h1>Create Asset</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Create Asset</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/Asset/Save" method="post">
+                        <label>Category Name: </label>
+                        <select class="form-control" name="CategoryId" required>
+                            <option value="">Choose Category...</option>
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.CategoryId">@item.CategoryName</option>
+                            }
+                        </select>
+                        <br />
+                        <select name="AssetStatus" class="form-control" required>
+                            <option value="">Choose Status...</option>
+                            <option value="brand new">Brand New</option>
+                            <option value="second hand">Second Hand</option>
+                        </select>
+                        <br />
+                        <label>Asset Name: </label>
+                        <input class="form-control" name="AssetName" required />
+                        <br />
+                        <button type="submit" class="btn btn-outline-info">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+﻿@using RentalWebApp.Models.ResponseModels;
+@model List<AssetResponseModel>;
+
+@{
+    ViewData["Title"] = "Asset Management";
+    var success = TempData["success"];
+    var error = TempData["error"];
+}
+
+<h1>Asset Management</h1>
+
+<a href="/Asset/CreateAsset" class="btn btn-outline-primary my-3">Create</a>
+
+@if (success is not null)
+{
+    <div class="alert alert-success" role="alert">
+        @success
+    </div>
+}
+
+@if (error is not null)
+{
+    <div class="alert alert-danger" role="alert">
+        @error
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Asset ID</th>
+            <th>Category Name</th>
+            <th>Asset Name</th>
+            <th>Asset Status</th>
+            <th>Create Date</th>
+            <th>Is Active</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.AssetId</td>
+                <td>@item.CategoryName</td>
+                <td>@item.AssetName</td>
+                <td>@item.AssetStatus</td>
+                <td>@item.CreateDate</td>
+                <td>@item.IsActive</td>
+                <td>
+                    <a class="btn btn-outline-success">Edit</a>
+                    <button class="btn btn-outline-danger" onclick="btnDelete('@item.AssetId')">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        function btnDelete(id) {
+            if (id == null || id == "")
+                return;
+
+            if (window.confirm("Are you sure you want to delete?")) {
+                window.location.href = `/Asset/Delete?id=${id}`;
+            }
+        }
+    </script>
+}
