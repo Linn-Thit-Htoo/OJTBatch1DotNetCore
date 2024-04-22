@@ -1,0 +1,57 @@
+﻿@using RentalWebApp.Models.ResponseModels;
+@model EditAssetResponseModel;
+@{
+    ViewData["Title"] = "Edit Asset";
+}
+
+<h1>Edit Asset</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Edit Asset</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/Asset/Update" method="post">
+                        <input type="hidden" name="AssetId" value="@Model.AssetDataModel.AssetId" />
+                        <label>Category Name: </label>
+                        <select class="form-control" name="CategoryId" required>
+                            <option value="">Choose Category...</option>
+                            @foreach (var item in Model.Categories)
+                            {
+                                @if (item.CategoryId == Model.AssetDataModel.CategoryId)
+                                {
+                                    <option value="@item.CategoryId" selected>@item.CategoryName</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.CategoryId">@item.CategoryName</option>
+                                }
+                            }
+                        </select>
+                        <br />
+                        <select name="AssetStatus" class="form-control" required>
+                            @if (Model.AssetDataModel.AssetStatus == "brand new")
+                            {
+                                <option value="brand new" selected>Brand New</option>
+                                <option value="second hand">Second Hand</option>
+                            }
+                            else
+                            {
+                                <option value="second hand" selected>Second Hand</option>
+                                <option value="brand new">Brand New</option>
+                            }
+                        </select>
+                        <br />
+                        <label>Asset Name: </label>
+                        <input class="form-control" name="AssetName" required value="@Model.AssetDataModel.AssetName" />
+                        <br />
+                        <button type="submit" class="btn btn-outline-info">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

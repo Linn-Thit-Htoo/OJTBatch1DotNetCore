@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
+using RentalWebApp.Models.RequestModels;
 using RentalWebApp.Models.ResponseModels;
 using RentalWebApp.Services;
 using System.Data;
@@ -78,6 +79,88 @@ VALUES (@CategoryId, @AssetName, @AssetStatus, @CreateDate, @IsActive)";
                 {
                     TempData["error"] = "Creating Fail!";
                 }
+                return RedirectToAction("AssetManagement");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public IActionResult EditAsset(long id)
+        {
+            try
+            {
+                string query = @"SELECT [AssetId]
+      ,[CategoryId]
+      ,[AssetName]
+      ,[AssetStatus]
+      ,[CreateDate]
+      ,[IsActive]
+  FROM [dbo].[Asset] WHERE AssetId = @AssetId AND IsActive = @IsActive";
+                List<SqlParameter> parameters = new()
+                {
+                    new("@AssetId", id),
+                    new("@IsActive", true)
+                };
+                DataTable asset = DbHelper.Query(query, parameters.ToArray());
+                string assetJson = JsonConvert.SerializeObject(asset);
+                AssetDataModel assetDataModel = new()
+                {
+                    AssetId = Convert.ToInt64(asset.Rows[0]["AssetId"]),
+                    CategoryId = Convert.ToInt64(asset.Rows[0]["CategoryId"]),
+                    AssetName = Convert.ToString(asset.Rows[0]["AssetName"])!,
+                    AssetStatus = Convert.ToString(asset.Rows[0]["AssetStatus"])!
+                };
+
+
+                string query1 = @"SELECT [CategoryId]
+      ,[CategoryName]
+      ,[IsActive]
+  FROM [dbo].[Category] WHERE IsActive = @IsActive";
+                DataTable category = DbHelper.Query(query1, new SqlParameter("@IsActive", true));
+                string categoryJson = JsonConvert.SerializeObject(category);
+                List<CategoryDataModel> categories = JsonConvert.DeserializeObject<List<CategoryDataModel>>(categoryJson)!;
+
+                EditAssetResponseModel respModel = new()
+                {
+                    Categories = categories,
+                    AssetDataModel = assetDataModel
+                };
+
+                return View(respModel);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Update(UpdateAssetRequestModel requestModel)
+        {
+            try
+            {
+                string query = @"UPDATE Asset SET CategoryId = @CategoryId, AssetName = @AssetName,
+AssetStatus = @AssetStatus WHERE AssetId = @AssetId";
+                List<SqlParameter> parameters = new()
+                {
+                    new("@CategoryId", requestModel.CategoryId),
+                    new("@AssetName", requestModel.AssetName),
+                    new("@AssetStatus", requestModel.AssetStatus),
+                    new("@AssetId", requestModel.AssetId)
+                };
+                int result = DbHelper.Execute(query, parameters.ToArray());
+
+                if (result > 0)
+                {
+                    TempData["success"] = "Updating Successful!";
+                }
+                else
+                {
+                    TempData["error"] = "Updating Fail!";
+                }
+
                 return RedirectToAction("AssetManagement");
             }
             catch (Exception ex)

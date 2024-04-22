@@ -304,5 +304,13 @@ Tables
 => edit user
 => delete user
 
-********** Day 12 **********
+Edit Asset
 
+1. fetch data according asset id (asset id, name, categroy id) => data model
+2. fetch all categories => data model
+3. create a new response data model
+4. return view
+
+category
+5. auto selected => category id in asset data model = category id in loop through categories
+6. other categories
