@@ -15,7 +15,7 @@ namespace RentalWebApp.Controllers
         {
             try
             {
-                string query = @"SELECT AssetId, Category.CategoryName, AssetName, AssetStatus, CreateDate, Asset.IsActive
+                string query = @"SELECT AssetId, AssetCode, Category.CategoryName, Quantity, AssetName, AssetStatus, CreateDate, Asset.IsActive
 FROM Asset
 INNER JOIN Category ON Asset.CategoryId = Category.CategoryId
 WHERE Asset.IsActive = @IsActive AND Category.IsActive = @IsActive";
@@ -58,13 +58,35 @@ WHERE Asset.IsActive = @IsActive AND Category.IsActive = @IsActive";
         {
             try
             {
-                string query = @"INSERT INTO Asset (CategoryId, AssetName, AssetStatus, CreateDate, IsActive)
-VALUES (@CategoryId, @AssetName, @AssetStatus, @CreateDate, @IsActive)";
+                string duplicateTestingQuery = @"SELECT [AssetId]
+      ,[CategoryId]
+      ,[AssetCode]
+      ,[AssetName]
+      ,[AssetStatus]
+      ,[CreateDate]
+      ,[IsActive]
+  FROM [dbo].[Asset] WHERE AssetCode = @AssetCode AND IsActive = @IsActive";
+                List<SqlParameter> sqlParameters = new()
+                {
+                    new("@AssetCode", dataModel.AssetCode),
+                    new("@IsActive", true)
+                };
+                DataTable asset = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
+                if (asset.Rows.Count > 0)
+                {
+                    TempData["error"] = "Asset Code already exists!";
+                    return RedirectToAction("AssetManagement");
+                }
+
+                string query = @"INSERT INTO Asset (AssetCode, CategoryId, AssetName, AssetStatus, Quantity, CreateDate, IsActive)
+VALUES (@AssetCode, @CategoryId, @AssetName, @AssetStatus, @Quantity, @CreateDate, @IsActive)";
                 List<SqlParameter> parameters = new()
                 {
                     new("@CategoryId", dataModel.CategoryId),
+                    new("@AssetCode", dataModel.AssetCode),
                     new("@AssetName", dataModel.AssetName),
                     new("@AssetStatus", dataModel.AssetStatus),
+                    new("@Quantity", dataModel.Quantity),
                     new("@CreateDate", DateTime.Now),
                     new("@IsActive", true)
                 };
@@ -93,8 +115,10 @@ VALUES (@CategoryId, @AssetName, @AssetStatus, @CreateDate, @IsActive)";
             {
                 string query = @"SELECT [AssetId]
       ,[CategoryId]
+      ,[AssetCode]
       ,[AssetName]
       ,[AssetStatus]
+      ,[Quantity]
       ,[CreateDate]
       ,[IsActive]
   FROM [dbo].[Asset] WHERE AssetId = @AssetId AND IsActive = @IsActive";
@@ -109,8 +133,10 @@ VALUES (@CategoryId, @AssetName, @AssetStatus, @CreateDate, @IsActive)";
                 {
                     AssetId = Convert.ToInt64(asset.Rows[0]["AssetId"]),
                     CategoryId = Convert.ToInt64(asset.Rows[0]["CategoryId"]),
+                    AssetCode = Convert.ToString(asset.Rows[0]["AssetCode"])!,
                     AssetName = Convert.ToString(asset.Rows[0]["AssetName"])!,
-                    AssetStatus = Convert.ToString(asset.Rows[0]["AssetStatus"])!
+                    AssetStatus = Convert.ToString(asset.Rows[0]["AssetStatus"])!,
+                    Quantity = Convert.ToInt32(asset.Rows[0]["Quantity"])
                 };
 
 
@@ -141,13 +167,37 @@ VALUES (@CategoryId, @AssetName, @AssetStatus, @CreateDate, @IsActive)";
         {
             try
             {
-                string query = @"UPDATE Asset SET CategoryId = @CategoryId, AssetName = @AssetName,
-AssetStatus = @AssetStatus WHERE AssetId = @AssetId";
+                string duplicateTestingQuery = @"SELECT [AssetId]
+      ,[CategoryId]
+      ,[AssetCode]
+      ,[AssetName]
+      ,[AssetStatus]
+      ,[CreateDate]
+      ,[IsActive]
+  FROM [dbo].[Asset] WHERE AssetCode = @AssetCode AND IsActive = @IsActive AND AssetId != @AssetId";
+                List<SqlParameter> sqlParameters = new()
+                {
+                    new("@AssetId", requestModel.AssetId),
+                    new("@AssetCode", requestModel.AssetCode),
+                    new("@IsActive", true)
+                };
+                DataTable asset = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
+                if (asset.Rows.Count > 0)
+                {
+                    TempData["error"] = "Asset Code already exists!";
+                    return RedirectToAction("AssetManagement");
+                }
+
+
+                string query = @"UPDATE Asset SET CategoryId = @CategoryId, AssetCode = @AssetCode, AssetName = @AssetName,
+AssetStatus = @AssetStatus, Quantity = @Quantity WHERE AssetId = @AssetId";
                 List<SqlParameter> parameters = new()
                 {
                     new("@CategoryId", requestModel.CategoryId),
+                    new("@AssetCode", requestModel.AssetCode),
                     new("@AssetName", requestModel.AssetName),
                     new("@AssetStatus", requestModel.AssetStatus),
+                    new("@Quantity", requestModel.Quantity),
                     new("@AssetId", requestModel.AssetId)
                 };
                 int result = DbHelper.Execute(query, parameters.ToArray());

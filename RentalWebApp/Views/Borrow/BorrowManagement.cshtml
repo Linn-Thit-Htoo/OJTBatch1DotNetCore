@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Borrow Management";
+    var success = TempData["success"];
+    var error = TempData["error"];
+}
+
+<h1>Borrow Management</h1>
+
+@if (success is not null)
+{
+    <div class="alert alert-success" role="alert">
+        @success
+    </div>
+}
+
+@if (error is not null)
+{
+    <div class="alert alert-danger" role="alert">
+        @error
+    </div>
+}
+
+<a class="btn btn-outline-primary my-3" href="/Borrow/CreateBorrow">Create</a>

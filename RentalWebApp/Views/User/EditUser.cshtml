@@ -19,6 +19,9 @@
                     {
                         <form method="post" action="/User/Update">
                             <input type="hidden" value="@Model[0].UserId" name="UserId" />
+                            <label>Member ID: </label>
+                            <input type="number" maxlength="6" class="form-control" required name="MemberId" value="@Model[0].MemberId" />
+                            <br />
                             <label>User Name: </label>
                             <input class="form-control" type="text" required name="UserName" value="@Model[0].UserName" />
                             <br />

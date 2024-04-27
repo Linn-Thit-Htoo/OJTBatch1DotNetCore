@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Http.Metadata;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
 using RentalWebApp.Models.RequestModels;
 using RentalWebApp.Models.ResponseModels;
+using RentalWebApp.Services;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 
 namespace RentalWebApp.Controllers
 {
@@ -32,6 +31,7 @@ namespace RentalWebApp.Controllers
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
                 string query = @"SELECT [UserId]
+      ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
@@ -66,9 +66,35 @@ namespace RentalWebApp.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(dataModel.UserName) || string.IsNullOrEmpty(dataModel.PhoneNumber))
+                if (string.IsNullOrEmpty(dataModel.MemberId))
+                    goto Fail;
+                else if (string.IsNullOrEmpty(dataModel.UserName))
+                    goto Fail;
+                else if (string.IsNullOrEmpty(dataModel.PhoneNumber))
+                    goto Fail;
+                else if (dataModel.MemberId.Length > 6)
                 {
-                    TempData["error"] = "Please fill all fields...";
+                    TempData["error"] = "Member ID must be 6 letters long";
+                    return RedirectToAction("UserManagement");
+                }
+
+                string duplicateTestingQuery = @"SELECT [UserId]
+      ,[MemberId]
+      ,[UserName]
+      ,[PhoneNumber]
+      ,[UserRole]
+      ,[IsActive]
+  FROM [dbo].[Users] WHERE IsActive = @IsActive AND MemberId = @MemberId";
+                List<SqlParameter> sqlParameters = new()
+                {
+                     new("@IsActive", true),
+                     new("@MemberId", dataModel.MemberId)
+                };
+                DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
+
+                if (user.Rows.Count > 0)
+                {
+                    TempData["error"] = "Memeber ID already exists";
                     return RedirectToAction("UserManagement");
                 }
 
@@ -80,9 +106,10 @@ namespace RentalWebApp.Controllers
 
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
-                string query = @"INSERT INTO Users (UserName, PhoneNumber, UserRole, IsActive)
-VALUES(@UserName, @PhoneNumber, @UserRole, @IsActive)";
+                string query = @"INSERT INTO Users (MemberId, UserName, PhoneNumber, UserRole, IsActive)
+VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
                 SqlCommand cmd = new(query, conn);
+                cmd.Parameters.AddWithValue("@MemberId", dataModel.MemberId);
                 cmd.Parameters.AddWithValue("@UserName", dataModel.UserName);
                 cmd.Parameters.AddWithValue("@PhoneNumber", dataModel.PhoneNumber);
                 cmd.Parameters.AddWithValue("@UserRole", "user");
@@ -93,11 +120,11 @@ VALUES(@UserName, @PhoneNumber, @UserRole, @IsActive)";
                 if (result > 0)
                 {
                     TempData["success"] = "Creating Successful!";
+                    return RedirectToAction("UserManagement");
                 }
-                else
-                {
-                    TempData["error"] = "Creating Fail!";
-                }
+
+            Fail:
+                TempData["error"] = "Please fill all fields...";
                 return RedirectToAction("UserManagement");
             }
             catch (Exception ex)
@@ -114,6 +141,7 @@ VALUES(@UserName, @PhoneNumber, @UserRole, @IsActive)";
                 conn.Open();
                 string query = @"SELECT [UserId]
       ,[UserName]
+      ,[MemberId]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
@@ -145,6 +173,27 @@ VALUES(@UserName, @PhoneNumber, @UserRole, @IsActive)";
                 if (IsPhoneNumberDuplicate(requestModel.PhoneNumber, requestModel.UserId))
                 {
                     TempData["error"] = "User with this phone already exists!";
+                    return RedirectToAction("UserManagement");
+                }
+
+                string duplicateTestingQuery = @"SELECT [UserId]
+      ,[MemberId]
+      ,[UserName]
+      ,[PhoneNumber]
+      ,[UserRole]
+      ,[IsActive]
+  FROM [dbo].[Users] WHERE IsActive = @IsActive AND MemberId = @MemberId AND UserId != @UserId";
+                List<SqlParameter> sqlParameters = new()
+                {
+                     new("@IsActive", true),
+                     new("@MemberId", requestModel.MemberId),
+                     new("@UserId", requestModel.UserId)
+                };
+                DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
+
+                if (user.Rows.Count > 0)
+                {
+                    TempData["error"] = "Memeber ID already exists";
                     return RedirectToAction("UserManagement");
                 }
 

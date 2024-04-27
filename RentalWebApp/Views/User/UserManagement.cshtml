@@ -28,6 +28,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Member ID</th>
             <th>User Name</th>
             <th>Phone Number</th>
             <th>User Role</th>
@@ -39,6 +40,7 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>@item.MemberId</td>
                 <td>@item.UserName</td>
                 <td>@item.PhoneNumber</td>
                 <td>@item.UserRole</td>

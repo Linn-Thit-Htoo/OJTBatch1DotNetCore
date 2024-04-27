@@ -1,5 +1,6 @@
 ﻿@using RentalWebApp.Models.ResponseModels;
 @model EditAssetResponseModel;
+
 @{
     ViewData["Title"] = "Edit Asset";
 }
@@ -31,6 +32,12 @@
                                 }
                             }
                         </select>
+                        <br />
+                        <label>Asset Code: </label>
+                        <input type="text" class="form-control" name="AssetCode" required value="@Model.AssetDataModel.AssetCode" />
+                        <br />
+                        <label>Quanity: </label>
+                        <input type="number" class="form-control" name="Quantity" required value="@Model.AssetDataModel.Quantity" />
                         <br />
                         <select name="AssetStatus" class="form-control" required>
                             @if (Model.AssetDataModel.AssetStatus == "brand new")
