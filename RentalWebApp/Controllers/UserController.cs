@@ -36,7 +36,7 @@ namespace RentalWebApp.Controllers
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
-  FROM [dbo].[Users] WHERE IsActive = @IsActive";
+  FROM [dbo].[Users] WHERE IsActive = @IsActive ORDER BY UserId DESC";
                 SqlCommand cmd = new(query, conn);
                 cmd.Parameters.AddWithValue("@IsActive", true);
                 SqlDataAdapter adapter = new(cmd);

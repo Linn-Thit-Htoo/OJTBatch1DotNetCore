@@ -1,4 +1,7 @@
-﻿@{
+﻿@using RentalWebApp.Models.ResponseModels;
+@model List<BorrowResponseModel>;
+
+@{
     ViewData["Title"] = "Borrow Management";
     var success = TempData["success"];
     var error = TempData["error"];
@@ -21,3 +24,51 @@
 }
 
 <a class="btn btn-outline-primary my-3" href="/Borrow/CreateBorrow">Create</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Member ID</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Asset Name</th>
+            <th>Category Name</th>
+            <th>Asset Code</th>
+            <th>Asset Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.MemberId</td>
+                <td>@item.BorrowDate</td>
+                <td>@item.ReturnDate</td>
+                <td>@item.AssetName</td>
+                <td>@item.CategoryName</td>
+                <td>@item.AssetCode</td>
+                <td>@item.AssetStatus</td>
+                <td>
+                    <a class="btn btn-outline-success" href="/Borrow/EditBorrow/@item.BorrowId">Edit</a>
+                    <button class="btn btn-outline-danger" onclick="btnDelete('@item.BorrowId')">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        function btnDelete(id) {
+            if (id === null || id === "")
+                return;
+
+            if (window.confirm("Are you sure you want to delete?")) {
+                window.location.href = `/Borrow/DeleteBorrow/${id}`;
+            }
+        }
+    </script>
+}

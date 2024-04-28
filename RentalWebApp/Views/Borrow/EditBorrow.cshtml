@@ -1,0 +1,29 @@
+﻿@using RentalWebApp.Models.Entities;
+@model BorrowDataModel;
+
+@{
+    ViewData["Title"] = "Edit Borrow";
+}
+
+<h1>Edit Borrow</h1>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Edit Borrow</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/Borrow/UpdateBorrow">
+                        <input name="BorrowId" value="@Model.BorrowId" type="hidden" />
+                        <label>Return Date: </label>
+                        <input type="date" value="@Model.ReturnDate" name="ReturnDate" class="form-control" />
+                        <br />
+                        <button type="submit" class="btn btn-outline-info">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
