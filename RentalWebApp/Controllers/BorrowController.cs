@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
-using RentalWebApp.Models.RequestModels;
+using RentalWebApp.Models.RequestModels.Borrow;
 using RentalWebApp.Models.ResponseModels;
 using RentalWebApp.Services;
 using System.Data;
@@ -22,6 +22,12 @@ namespace RentalWebApp.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"SELECT BorrowId, BorrowDate, ReturnDate, Users.MemberId, Users.UserName, 
 Asset.AssetCode, Asset.AssetName, Asset.AssetStatus, Category.CategoryName
 FROM Borrow
@@ -48,6 +54,12 @@ ORDER BY Borrow.BorrowId DESC";
 
         public IActionResult CreateBorrow()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage", "User");
+            }
+
             return View();
         }
 
@@ -139,6 +151,12 @@ VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"SELECT [BorrowId]
       ,[UserId]
       ,[AssetId]
@@ -208,6 +226,12 @@ VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"UPDATE Borrow SET IsActive = @IsActive WHERE BorrowId = @BorrowId";
                 List<SqlParameter> parameters = new()
                 {

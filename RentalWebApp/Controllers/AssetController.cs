@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
-using RentalWebApp.Models.RequestModels;
+using RentalWebApp.Models.RequestModels.Asset;
 using RentalWebApp.Models.ResponseModels;
 using RentalWebApp.Services;
 using System.Data;
@@ -15,6 +15,12 @@ namespace RentalWebApp.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"SELECT AssetId, AssetCode, Category.CategoryName, Quantity, AssetName, AssetStatus, CreateDate, Asset.IsActive
 FROM Asset
 INNER JOIN Category ON Asset.CategoryId = Category.CategoryId
@@ -36,6 +42,12 @@ WHERE Asset.IsActive = @IsActive AND Category.IsActive = @IsActive";
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
@@ -113,6 +125,12 @@ VALUES (@AssetCode, @CategoryId, @AssetName, @AssetStatus, @Quantity, @CreateDat
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"SELECT [AssetId]
       ,[CategoryId]
       ,[AssetCode]
@@ -223,6 +241,12 @@ AssetStatus = @AssetStatus, Quantity = @Quantity WHERE AssetId = @AssetId";
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query = @"UPDATE Asset SET IsActive = @IsActive WHERE AssetId = @AssetId";
                 List<SqlParameter> parameters = new()
                 {

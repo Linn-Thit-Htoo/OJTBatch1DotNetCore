@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
-using RentalWebApp.Models.RequestModels;
+using RentalWebApp.Models.RequestModels.Category;
 using RentalWebApp.Services;
 using System.Data;
 using System.Data.SqlClient;
@@ -21,6 +21,12 @@ namespace RentalWebApp.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
                 string query = @"SELECT [CategoryId]
@@ -47,6 +53,12 @@ namespace RentalWebApp.Controllers
 
         public IActionResult CreateCategory()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage", "User");
+            }
+
             return View();
         }
 
@@ -100,6 +112,12 @@ namespace RentalWebApp.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
                 string query = @"SELECT [CategoryId]
@@ -181,6 +199,12 @@ WHERE CategoryId = @CategoryId";
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage", "User");
+                }
+
                 string query1 = @"SELECT AssetId, CategoryId, AssetName FROM Asset WHERE CategoryId = @CategoryId";
                 DataTable dt1 = DbHelper.Query(query1, new SqlParameter("@CategoryId", id));
                 if (dt1.Rows.Count > 0)

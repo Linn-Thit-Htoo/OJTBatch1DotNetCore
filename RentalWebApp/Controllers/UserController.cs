@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
-using RentalWebApp.Models.RequestModels;
+using RentalWebApp.Models.RequestModels.User;
 using RentalWebApp.Models.ResponseModels;
 using RentalWebApp.Services;
 using System.Data;
@@ -24,10 +24,52 @@ namespace RentalWebApp.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Login(LoginRequestModel requestModel)
+        {
+            try
+            {
+                string query = @"SELECT [UserId]
+      ,[MemberId]
+      ,[UserName]
+      ,[PhoneNumber]
+      ,[UserRole]
+      ,[IsActive]
+  FROM [dbo].[Users] WHERE PhoneNumber = @PhoneNumber AND Password = @Password AND UserRole = @UserRole AND
+IsActive = @IsActive";
+                List<SqlParameter> parameters = new()
+                {
+                    new("@PhoneNumber", requestModel.PhoneNumber),
+                    new("@Password", requestModel.Password),
+                    new("@UserRole", "admin"),
+                    new("@IsActive", true)
+                };
+                DataTable user = DbHelper.Query(query, parameters.ToArray());
+                if (user.Rows.Count == 0)
+                {
+                    TempData["error"] = "Login Fail!";
+                    return RedirectToAction("LoginPage");
+                }
+
+                HttpContext.Session.SetString("name", user.Rows[0]["UserName"].ToString()!);
+                return RedirectToAction("UserManagement");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public IActionResult UserManagement()
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage");
+                }
+
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
                 string query = @"SELECT [UserId]
@@ -58,6 +100,12 @@ namespace RentalWebApp.Controllers
         [ActionName("CreateUser")]
         public IActionResult GoToCreateUserPage()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage");
+            }
+
             return View();
         }
 
@@ -137,6 +185,12 @@ VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
         {
             try
             {
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage");
+                }
+
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
                 string query = @"SELECT [UserId]
@@ -230,6 +284,13 @@ WHERE UserId = @UserId AND IsActive = @IsActive";
         {
             try
             {
+
+                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+                {
+                    TempData["error"] = "Please login first!";
+                    return RedirectToAction("LoginPage");
+                }
+
                 SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
                 conn.Open();
                 string query = @"UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";

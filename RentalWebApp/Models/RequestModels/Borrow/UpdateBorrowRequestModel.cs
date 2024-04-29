@@ -1,4 +1,4 @@
-﻿namespace RentalWebApp.Models.RequestModels
+﻿namespace RentalWebApp.Models.RequestModels.Borrow
 {
     public class UpdateBorrowRequestModel
     {

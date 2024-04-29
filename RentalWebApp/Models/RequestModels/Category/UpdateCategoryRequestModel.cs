@@ -1,4 +1,4 @@
-﻿namespace RentalWebApp.Models.RequestModels
+﻿namespace RentalWebApp.Models.RequestModels.Category
 {
     public class UpdateCategoryRequestModel
     {
