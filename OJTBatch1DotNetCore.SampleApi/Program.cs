@@ -1,16 +1,17 @@
-using OJTBatch1DotNetCore.RestApiDemo.Services;
+using Microsoft.EntityFrameworkCore;
+using OJTBatch1DotNetCore.SampleApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers().AddJsonOptions(opt =>
-{
-    opt.JsonSerializerOptions.PropertyNamingPolicy = null;
-});
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<AdoDotNetService>();
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
+}, ServiceLifetime.Transient);
 
 var app = builder.Build();
 
