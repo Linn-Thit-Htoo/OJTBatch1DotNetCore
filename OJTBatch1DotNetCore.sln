@@ -59,9 +59,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.RestApi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{10590C45-BEE1-4608-8B91-0DEC9A3800C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OJTBatch1DotNetCore.SampleApi", "OJTBatch1DotNetCore.SampleApi\OJTBatch1DotNetCore.SampleApi.csproj", "{AB9A30DC-BA62-4FED-ADC0-ADA1579E59E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.SampleApi", "OJTBatch1DotNetCore.SampleApi\OJTBatch1DotNetCore.SampleApi.csproj", "{AB9A30DC-BA62-4FED-ADC0-ADA1579E59E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OJTBatch1DotNetCore.SampleApi.SampleMvc", "OJTBatch1DotNetCore.SampleApi.SampleMvc\OJTBatch1DotNetCore.SampleApi.SampleMvc.csproj", "{F99A4661-9EC0-40C9-AE82-8A3605C56BF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OJTBatch1DotNetCore.SampleApi.SampleMvc", "OJTBatch1DotNetCore.SampleApi.SampleMvc\OJTBatch1DotNetCore.SampleApi.SampleMvc.csproj", "{F99A4661-9EC0-40C9-AE82-8A3605C56BF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTrackerApi", "ExpenseTrackerApi\ExpenseTrackerApi.csproj", "{787AA9D3-DB5C-4871-860A-93F04DB85163}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,6 +159,10 @@ Global
 		{F99A4661-9EC0-40C9-AE82-8A3605C56BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F99A4661-9EC0-40C9-AE82-8A3605C56BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F99A4661-9EC0-40C9-AE82-8A3605C56BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{787AA9D3-DB5C-4871-860A-93F04DB85163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{787AA9D3-DB5C-4871-860A-93F04DB85163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{787AA9D3-DB5C-4871-860A-93F04DB85163}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{787AA9D3-DB5C-4871-860A-93F04DB85163}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{1AF826D8-2BD6-4CBE-BA9F-460BE0845E72} = {1EDD0B58-4EE7-48F3-A7AE-E44795B16775}
 		{AB9A30DC-BA62-4FED-ADC0-ADA1579E59E0} = {10590C45-BEE1-4608-8B91-0DEC9A3800C5}
 		{F99A4661-9EC0-40C9-AE82-8A3605C56BF8} = {10590C45-BEE1-4608-8B91-0DEC9A3800C5}
+		{787AA9D3-DB5C-4871-860A-93F04DB85163} = {9CDFC5F2-DF7B-4AEE-AE5A-F690E53F32D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E7DB98CD-641D-475D-9969-B2AB76DD5EC2}
