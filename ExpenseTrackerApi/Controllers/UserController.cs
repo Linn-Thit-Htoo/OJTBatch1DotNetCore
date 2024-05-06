@@ -11,16 +11,21 @@ namespace ExpenseTrackerApi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly AdoDotNetService _adoDotNetService;
+    private readonly IConfiguration _configuration;
 
-    public UserController(AdoDotNetService service)
+    public UserController(AdoDotNetService service, IConfiguration configuration)
     {
         _adoDotNetService = service;
+        _configuration = configuration;
     }
 
     [HttpPost]
     [Route("/api/account/register")]
     public IActionResult Register([FromBody] RegisterRequestModel requestModel)
     {
+        SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+        conn.Open();
+        SqlTransaction transaction = conn.BeginTransaction();
         try
         {
             if (string.IsNullOrEmpty(requestModel.UserName))
@@ -70,7 +75,12 @@ public class UserController : ControllerBase
             }
 
             string query = @"INSERT INTO Rest_Users (UserName, Email, Password, UserRole, DOB, Gender, IsActive)
-VALUES (@UserName, @Email, @Password, @UserRole, @DOB, @Gender, @IsActive)";
+VALUES (@UserName, @Email, @Password, @UserRole, @DOB, @Gender, @IsActive);
+SELECT SCOPE_IDENTITY();";
+            SqlCommand cmd = new(query, conn)
+            {
+                Transaction = transaction
+            };
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@UserName", requestModel.UserName),
@@ -81,12 +91,41 @@ VALUES (@UserName, @Email, @Password, @UserRole, @DOB, @Gender, @IsActive)";
                 new SqlParameter("@Gender", requestModel.Gender),
                 new SqlParameter("@IsActive", true)
             };
-            int result = _adoDotNetService.Execute(query, parameters.ToArray());
+            cmd.Parameters.AddRange(parameters.ToArray());
+            long userID = Convert.ToInt64(cmd.ExecuteScalar());
 
-            return result > 0 ? StatusCode(201, "Registration Successful.") : BadRequest("Registration Fail.");
+            int result = 0;
+            if (userID != 0)
+            {
+                string balanceQuery = @"INSERT INTO Rest_Balance (UserId, Amount, CreateDate)
+            VALUES (@UserId, @Amount, @CreateDate)";
+                List<SqlParameter> balanceParams = new()
+                {
+                    new SqlParameter("@UserId", userID),
+                    new SqlParameter("@Amount", "0"),
+                    new SqlParameter("@CreateDate", DateTime.Now)
+                };
+                SqlCommand balanceCmd = new(balanceQuery, conn)
+                {
+                    Transaction = transaction
+                };
+                balanceCmd.Parameters.AddRange(balanceParams.ToArray());
+                result = balanceCmd.ExecuteNonQuery();
+            }
+
+            if (userID == 0 || result == 0 || result < 0)
+            {
+                transaction.Rollback();
+                return BadRequest("Registration Fail.");
+            }
+
+            transaction.Commit();
+            conn.Close();
+            return StatusCode(201, "Registration Successful.");
         }
         catch (Exception ex)
         {
+            transaction.Rollback();
             return BadRequest(ex.Message);
         }
     }
