@@ -1,6 +1,7 @@
 ﻿using ExpenseTrackerApi.Enums;
 using ExpenseTrackerApi.Models.RequestModels.User;
 using ExpenseTrackerApi.Models.ResponseModels.User;
+using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -55,14 +56,7 @@ public class UserController : ControllerBase
             else
                 return BadRequest("Invalid Gender");
 
-            string duplicateQuery = @"SELECT [UserId]
-      ,[UserName]
-      ,[Email]
-      ,[UserRole]
-      ,[DOB]
-      ,[Gender]
-      ,[IsActive]
-  FROM [dbo].[Rest_Users] WHERE Email = @Email AND IsActive = @IsActive";
+            string duplicateQuery = UserQuery.GetDuplicateEmailQuery();
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@Email", requestModel.Email),
@@ -73,10 +67,7 @@ public class UserController : ControllerBase
             {
                 return Conflict("User with this email already exists. Please login.");
             }
-
-            string query = @"INSERT INTO Rest_Users (UserName, Email, Password, UserRole, DOB, Gender, IsActive)
-VALUES (@UserName, @Email, @Password, @UserRole, @DOB, @Gender, @IsActive);
-SELECT SCOPE_IDENTITY();";
+            string query = UserQuery.GetRegisterQuery();
             SqlCommand cmd = new(query, conn)
             {
                 Transaction = transaction
@@ -97,8 +88,7 @@ SELECT SCOPE_IDENTITY();";
             int result = 0;
             if (userID != 0)
             {
-                string balanceQuery = @"INSERT INTO Rest_Balance (UserId, Amount, CreateDate)
-            VALUES (@UserId, @Amount, @CreateDate)";
+                string balanceQuery = BalanceQuery.CreateBalanceQuery();
                 List<SqlParameter> balanceParams = new()
                 {
                     new SqlParameter("@UserId", userID),
@@ -138,15 +128,7 @@ SELECT SCOPE_IDENTITY();";
         {
             if (requestModel is null || string.IsNullOrEmpty(requestModel.Email) || string.IsNullOrEmpty(requestModel.Password))
                 return BadRequest("Email or Password is empty.");
-
-            string query = @"SELECT [UserId]
-      ,[UserName]
-      ,[Email]
-      ,[UserRole]
-      ,[DOB]
-      ,[Gender]
-      ,[IsActive]
-  FROM [dbo].[Rest_Users] WHERE Email = @Email AND Password = @Password AND IsActive = @IsActive";
+            string query = UserQuery.GetLoginQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@Email", requestModel.Email),

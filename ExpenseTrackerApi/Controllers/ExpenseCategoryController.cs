@@ -1,5 +1,6 @@
 ﻿using ExpenseTrackerApi.Models.Entities;
 using ExpenseTrackerApi.Models.RequestModels.ExpenseCategory;
+using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -24,10 +25,7 @@ public class ExpenseCategoryController : ControllerBase
     {
         try
         {
-            string query = @"SELECT [ExpenseCategoryId]
-      ,[ExpenseCategoryName]
-      ,[IsActive]
-  FROM [dbo].[Rest_Expense_Category] WHERE IsActive = @IsActive ORDER BY ExpenseCategoryId DESC";
+            string query = ExpenseCategoryQuery.GetExpenseCategoryListQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IsActive", true)
@@ -51,10 +49,7 @@ public class ExpenseCategoryController : ControllerBase
             if (string.IsNullOrEmpty(requestModel.ExpenseCategoryName))
                 return BadRequest("Category name cannot be empty.");
 
-            string duplicateQuery = @"SELECT [ExpenseCategoryId]
-      ,[ExpenseCategoryName]
-      ,[IsActive]
-  FROM [dbo].[Rest_Expense_Category] WHERE ExpenseCategoryName = @ExpenseCategoryName AND IsActive = @IsActive";
+            string duplicateQuery = ExpenseCategoryQuery.CheckCreateExpenseCategoryDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
@@ -64,7 +59,7 @@ public class ExpenseCategoryController : ControllerBase
             if (dt.Rows.Count > 0)
                 return Conflict("Expense Category Name already exists!");
 
-            string query = @"INSERT INTO Rest_Expense_Category (ExpenseCategoryName, IsActive) VALUES (@ExpenseCategoryName, @IsActive)";
+            string query = ExpenseCategoryQuery.CreateExpenseCategoryQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
@@ -86,12 +81,7 @@ public class ExpenseCategoryController : ControllerBase
     {
         try
         {
-            string duplicateQuery = @"SELECT [ExpenseCategoryId]
-      ,[ExpenseCategoryName]
-      ,[IsActive]
-  FROM [dbo].[Rest_Expense_Category] WHERE ExpenseCategoryName = @ExpenseCategoryName AND
-IsActive = @IsActive AND
-ExpenseCategoryId != @ExpenseCategoryId";
+            string duplicateQuery = ExpenseCategoryQuery.CheckUpdateExpenseCategoryDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
@@ -102,8 +92,7 @@ ExpenseCategoryId != @ExpenseCategoryId";
             if (dt.Rows.Count > 0)
                 return Conflict("Expense Category Name already exists.");
 
-            string query = @"UPDATE Rest_Expense_Category SET ExpenseCategoryName = @ExpenseCategoryName WHERE
-ExpenseCategoryId = @ExpenseCategoryId";
+            string query = ExpenseCategoryQuery.UpdateExpenseCategoryQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
@@ -122,15 +111,11 @@ ExpenseCategoryId = @ExpenseCategoryId";
     // delete
     [HttpDelete]
     [Route("/api/expense-category/{id}")]
-    public IActionResult DeleteExpense(long id)
+    public IActionResult DeleteExpenseCategory(long id)
     {
         try
         {
-            string validateQuery = @"SELECT [ExpenseId]
-      ,[ExpenseCategoryId]
-      ,[Amount]
-      ,[IsActive]
-  FROM [dbo].[Rest_Expense] WHERE ExpenseCategoryId = @ExpenseCategoryId";
+            string validateQuery = ExpenseCategoryQuery.CheckExpenseCategoryQuery();
             List<SqlParameter> validateParams = new()
             {
                 new SqlParameter("@ExpenseCategoryId", id)
@@ -140,10 +125,10 @@ ExpenseCategoryId = @ExpenseCategoryId";
             if (dt.Rows.Count > 0)
                 return Conflict("Expense with this category already exists! Cannot delete.");
 
-            string query = @"UPDATE Rest_Expense SET IsActive = @IsActive WHERE ExpenseId = @ExpenseId";
+            string query = ExpenseCategoryQuery.DeleteExpenseCategoryQuery();
             List<SqlParameter> parameters = new()
             {
-                new SqlParameter("@ExpenseId", id),
+                new SqlParameter("@ExpenseCategoryId", id),
                 new SqlParameter("@IsActive", false)
             };
             int result = _service.Execute(query, parameters.ToArray());

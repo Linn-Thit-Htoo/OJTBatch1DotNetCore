@@ -1,5 +1,6 @@
 ﻿using ExpenseTrackerApi.Models.Entities;
 using ExpenseTrackerApi.Models.RequestModels.IncomeCategory;
+using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -22,10 +23,7 @@ public class IncomeCategoryController : ControllerBase
     {
         try
         {
-            string query = @"SELECT [IncomeCategoryId]
-      ,[IncomeCategoryName]
-      ,[IsActive]
-  FROM [dbo].[Rest_Income_Category] WHERE IsActive = @IsActive ORDER BY IncomeCategoryId DESC";
+            string query = IncomeCategoryQuery.GetIncomeCategoryListQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IsActive", true)
@@ -49,10 +47,7 @@ public class IncomeCategoryController : ControllerBase
             if (string.IsNullOrEmpty(requestModel.IncomeCategoryName))
                 return BadRequest("Category Name cannot be empty.");
 
-            string duplicateQuery = @"SELECT [IncomeCategoryId]
-      ,[IncomeCategoryName]
-      ,[IsActive]
-  FROM [dbo].[Rest_Income_Category] WHERE IncomeCategoryName = @IncomeCategoryName AND IsActive = @IsActive";
+            string duplicateQuery = IncomeCategoryQuery.CheckCreateIncomeCategoryDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
@@ -62,8 +57,7 @@ public class IncomeCategoryController : ControllerBase
             if (category.Rows.Count > 0)
                 return Conflict("Income Category Name already exists.");
 
-            string query = @"INSERT INTO Rest_Income_Category (IncomeCategoryName, IsActive)
-VALUES (@IncomeCategoryName, @IsActive)";
+            string query = IncomeCategoryQuery.CreateIncomeCategoryQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
@@ -86,13 +80,9 @@ VALUES (@IncomeCategoryName, @IsActive)";
         try
         {
             if (string.IsNullOrEmpty(requestModel.IncomeCategoryName))
-                return BadRequest("Category name already exists!");
+                return BadRequest("Category name cannot be empty.");
 
-            string duplicateQuery = @"SELECT [IncomeCategoryId]
-      ,[IncomeCategoryName]
-      ,[IsActive]
-  FROM [dbo].[Rest_Income_Category] WHERE IncomeCategoryName = @IncomeCategoryName AND
-IsActive = @IsActive AND IncomeCategoryId != @IncomeCategoryId";
+            string duplicateQuery = IncomeCategoryQuery.CheckIncomeCategoryDuplicateQuery();
             List<SqlParameter> duplicateParams = new()
             {
                 new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
@@ -103,8 +93,7 @@ IsActive = @IsActive AND IncomeCategoryId != @IncomeCategoryId";
             if (dt.Rows.Count > 0)
                 return Conflict("Income Category Name already exists.");
 
-            string query = @"UPDATE Rest_Income_Category SET IncomeCategoryName = @IncomeCategoryName 
-WHERE IncomeCategoryId = @IncomeCategoryId";
+            string query = IncomeCategoryQuery.UpdateIncomeCategoryQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
@@ -130,18 +119,14 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
             if (id == 0)
                 return BadRequest();
 
-            string validateQuery = @"SELECT [IncomeId]
-      ,[IncomeCategoryId]
-      ,[Amount]
-      ,[IsActive]
-  FROM [dbo].[Rest_Income] WHERE IncomeCategoryId = @IncomeCategoryId";
+            string validateQuery = IncomeCategoryQuery.CheckIncomeCategoryExistsQuery();
             SqlParameter[] validateParams = { new("@IncomeCategoryId", id) };
             DataTable dt = _service.QueryFirstOrDefault(validateQuery, validateParams);
 
             if (dt.Rows.Count > 0)
                 return Conflict("Income with this category already exists! Cannot delete.");
 
-            string query = @"UPDATE Rest_Income_Category SET IsActive = @IsActive WHERE IncomeCategoryId = @IncomeCategoryId";
+            string query = IncomeCategoryQuery.DeleteIncomeCategoryQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IsActive", false),

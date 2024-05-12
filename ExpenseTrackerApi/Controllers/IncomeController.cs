@@ -1,6 +1,6 @@
-﻿using ExpenseTrackerApi.Models.Entities;
-using ExpenseTrackerApi.Models.RequestModels.Income;
+﻿using ExpenseTrackerApi.Models.RequestModels.Income;
 using ExpenseTrackerApi.Models.ResponseModels.Income;
+using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
@@ -22,15 +22,34 @@ public class IncomeController : ControllerBase
     {
         try
         {
-            string query = @"SELECT Rest_Income.IncomeId, Rest_Users.UserName, Rest_Income_Category.IncomeCategoryName,
-Rest_Income.Amount, Rest_Income.IsActive
-FROM Rest_Income
-INNER JOIN Rest_Users ON Rest_Income.UserId = Rest_Users.UserId
-INNER JOIN Rest_Income_Category ON Rest_Income.IncomeCategoryId = Rest_Income_Category.IncomeCategoryId
-WHERE Rest_Income.IsActive = @IsActive
-ORDER BY IncomeId DESC";
+            string query = IncomeQuery.GetIncomeListQuery();
             List<SqlParameter> parameters = new()
             {
+                new SqlParameter("@IsActive", true)
+            };
+            List<IncomeResponseModel> lst = _adoDotNetService.Query<IncomeResponseModel>(query, parameters.ToArray());
+
+            return Ok(lst);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("/api/income/{userID}")]
+    public IActionResult GetIncomeListByUserId(long userID)
+    {
+        try
+        {
+            if (userID <= 0)
+                return BadRequest("User Id cannot be empty.");
+
+            string query = IncomeQuery.GetIncomeListByUserIdQuery();
+            List<SqlParameter> parameters = new()
+            {
+                new SqlParameter("@UserId", userID),
                 new SqlParameter("@IsActive", true)
             };
             List<IncomeResponseModel> lst = _adoDotNetService.Query<IncomeResponseModel>(query, parameters.ToArray());
@@ -52,13 +71,13 @@ ORDER BY IncomeId DESC";
             if (requestModel.IncomeCategoryId == 0 || requestModel.Amount == 0 || requestModel.UserId == 0)
                 return BadRequest();
 
-            string query = @"INSERT INTO Rest_Income (IncomeCategoryId, UserId, Amount, IsActive)
-VALUES (@IncomeCategoryId, @UserId, @Amount, @IsActive)";
+            string query =IncomeQuery.CreateIncomeQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IncomeCategoryId", requestModel.IncomeCategoryId),
                 new SqlParameter("@UserId", requestModel.UserId),
                 new SqlParameter("@Amount", requestModel.Amount),
+                new SqlParameter("@CreateDate", DateTime.Now),
                 new SqlParameter("@IsActive", true)
             };
             int result = _adoDotNetService.Execute(query, parameters.ToArray());
@@ -80,8 +99,7 @@ VALUES (@IncomeCategoryId, @UserId, @Amount, @IsActive)";
             if (requestModel.IncomeCategoryId == 0 || requestModel.Amount == 0 || id == 0 || requestModel.UserId == 0)
                 return BadRequest();
 
-            string query = @"UPDATE Rest_Income SET IncomeCategoryId = @IncomeCategoryId,
-Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
+            string query = IncomeQuery.UpdateIncomeQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IncomeId", id),
@@ -105,7 +123,7 @@ Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
     {
         try
         {
-            string query = @"UPDATE Rest_Income SET IsActive = @IsActive WHERE IncomeId = @IncomeId";
+            string query = IncomeQuery.DeleteIncomeQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@IsActive", false),

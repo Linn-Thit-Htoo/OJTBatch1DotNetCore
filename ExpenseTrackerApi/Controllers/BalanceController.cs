@@ -1,4 +1,5 @@
 ﻿using ExpenseTrackerApi.Models.RequestModels.Balance;
+using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -27,14 +28,7 @@ public class BalanceController : ControllerBase
             if (string.IsNullOrEmpty(requestModel.Amount))
                 return BadRequest("Amount cannot be empty.");
 
-            string checkUserQuery = @"SELECT [UserId]
-      ,[UserName]
-      ,[Email]
-      ,[UserRole]
-      ,[DOB]
-      ,[Gender]
-      ,[IsActive]
-  FROM [dbo].[Rest_Users] WHERE UserId = @UserId AND IsActive = @IsActive";
+            string checkUserQuery = UserQuery.CheckUserEixstsQuery();
             List<SqlParameter> checkUserParams = new()
             {
                 new SqlParameter("@UserId", requestModel.UserId),
@@ -44,8 +38,7 @@ public class BalanceController : ControllerBase
             if (user.Rows.Count == 0)
                 return NotFound("User not found.");
 
-            string balanceUpdateQuery = @"UPDATE Rest_Balance SET Amount = @Amount, UpdateDate = @UpdateDate
-WHERE UserId = @UserId";
+            string balanceUpdateQuery = BalanceQuery.UpdateBalanceQuery();
             List<SqlParameter> parameters = new()
             {
                 new SqlParameter("@UserId", requestModel.UserId),
