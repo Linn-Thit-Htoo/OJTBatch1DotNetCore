@@ -65,6 +65,9 @@ public class CategoryController : ControllerBase
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     [HttpPut]
     [Route("/api/category/{id}")]
     public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestModel requestModel, long id)
