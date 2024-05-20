@@ -36,7 +36,6 @@ public class AdoDotNetService
 
     #region Query First Or Default
 
-    #endregion
     public DataTable QueryFirstOrDefault(string query, SqlParameter[]? parameters)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
@@ -50,6 +49,7 @@ public class AdoDotNetService
 
         return dt;
     }
+    #endregion
 
     public int Execute(string query, SqlParameter[]? parameters = null)
     {
