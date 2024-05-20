@@ -54,7 +54,6 @@ public class AdoDotNetService
 
     #region Execute
 
-    #endregion
     public int Execute(string query, SqlParameter[]? parameters = null)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
@@ -66,4 +65,5 @@ public class AdoDotNetService
 
         return result;
     }
+    #endregion
 }
