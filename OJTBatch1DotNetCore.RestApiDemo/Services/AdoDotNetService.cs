@@ -49,6 +49,7 @@ public class AdoDotNetService
 
         return dt;
     }
+
     #endregion
 
     public int Execute(string query, SqlParameter[]? parameters = null)
