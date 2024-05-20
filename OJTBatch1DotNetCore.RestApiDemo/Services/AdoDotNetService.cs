@@ -52,6 +52,9 @@ public class AdoDotNetService
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public int Execute(string query, SqlParameter[]? parameters = null)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
