@@ -1,7 +1,6 @@
-﻿namespace MvcSample.Helper
+﻿namespace MvcSample.Helper;
+
+public class GetConnectionString
 {
-    public class GetConnectionString
-    {
-        public static string _connStr = "Data Source=(local);Initial Catalog=OJT-Batch1;Integrated Security=True";
-    }
+    public static string _connStr = "Data Source=(local);Initial Catalog=OJT-Batch1;Integrated Security=True";
 }
