@@ -13,6 +13,9 @@ public class AdoDotNetService
         _configuration = configuration;
     }
 
+    #region MyRegion
+
+    #endregion
     public List<T> Query<T>(string query, SqlParameter[]? parameters = null)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
