@@ -14,7 +14,7 @@ public class CategoryController : ControllerBase
         _appDbContext = appDbContext;
     }
 
-    #region MyRegion
+    #region Get Categories
 
     #endregion
     [HttpGet]
