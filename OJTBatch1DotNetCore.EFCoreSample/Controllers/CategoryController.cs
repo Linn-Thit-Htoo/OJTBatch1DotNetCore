@@ -35,7 +35,7 @@ public class CategoryController : ControllerBase
 
     #endregion
 
-    #region MyRegion
+    #region Create Category
 
     #endregion
     [HttpPost]
