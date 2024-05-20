@@ -65,7 +65,7 @@ public class CategoryController : ControllerBase
 
     #endregion
 
-    #region MyRegion
+    #region Update Category
 
     #endregion
     [HttpPut]
