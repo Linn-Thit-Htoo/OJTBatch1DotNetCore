@@ -16,7 +16,6 @@ public class CategoryController : ControllerBase
 
     #region Get Categories
 
-    #endregion
     [HttpGet]
     [Route("/api/category")]
     public async Task<IActionResult> GetCategories()
@@ -33,6 +32,7 @@ public class CategoryController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
+    #endregion
 
     [HttpPost]
     [Route("/api/category")]
