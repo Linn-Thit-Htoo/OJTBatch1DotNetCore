@@ -37,7 +37,6 @@ public class CategoryController : ControllerBase
 
     #region Create Category
 
-    #endregion
     [HttpPost]
     [Route("/api/category")]
     public async Task<IActionResult> CreateCategory([FromBody] CategoryModel requestModel)
@@ -63,6 +62,7 @@ public class CategoryController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
+    #endregion
 
     [HttpPut]
     [Route("/api/category/{id}")]
