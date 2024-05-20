@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MvcSample.Helper;
 using MvcSample.Models;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.Metadata;
 
 namespace MvcSample.Controllers
 {
