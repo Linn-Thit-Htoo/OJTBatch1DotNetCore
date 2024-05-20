@@ -32,6 +32,7 @@ public class CategoryController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
+
     #endregion
 
     [HttpPost]
