@@ -14,6 +14,9 @@ public class CategoryController : ControllerBase
         _appDbContext = appDbContext;
     }
 
+    #region MyRegion
+
+    #endregion
     [HttpGet]
     [Route("/api/category")]
     public async Task<IActionResult> GetCategories()
