@@ -1,49 +1,48 @@
-﻿namespace OJTBatch1DotNetCore.ConsoleAppDay8.Interface
+﻿namespace OJTBatch1DotNetCore.ConsoleAppDay8.Interface;
+
+public interface IAnimal
 {
-    public interface IAnimal
+    void MakeSound();
+    void Eat();
+    void Run();
+}
+
+public interface IMammal
+{
+    void Sleep();
+}
+
+public class Dog : IAnimal, IMammal
+{
+    public void Eat()
     {
-        void MakeSound();
-        void Eat();
-        void Run();
+        Console.WriteLine("Dog is eating...");
     }
 
-    public interface IMammal
+    public void MakeSound()
     {
-        void Sleep();
+        Console.WriteLine("Dog is barking...");
     }
 
-    public class Dog : IAnimal, IMammal
+    public void Run()
     {
-        public void Eat()
-        {
-            Console.WriteLine("Dog is eating...");
-        }
-
-        public void MakeSound()
-        {
-            Console.WriteLine("Dog is barking...");
-        }
-
-        public void Run()
-        {
-            Console.WriteLine("Dog is Running...");
-        }
-
-        public void Sleep()
-        {
-            Console.WriteLine("Dog is Sleeping...");
-        }
+        Console.WriteLine("Dog is Running...");
     }
 
-    public class Program
+    public void Sleep()
     {
-        public static void Main(string[] args)
-        {
-            Dog dog = new();
-            dog.MakeSound();
-            dog.Eat();
-            dog.Run();
-            dog.Sleep();
-        }
+        Console.WriteLine("Dog is Sleeping...");
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Dog dog = new();
+        dog.MakeSound();
+        dog.Eat();
+        dog.Run();
+        dog.Sleep();
     }
 }
