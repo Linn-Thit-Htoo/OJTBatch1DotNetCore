@@ -104,7 +104,6 @@ public class CategoryController : ControllerBase
 
     #region Delete Category
 
-    #endregion
     [HttpDelete]
     [Route("/api/category/{id}")]
     public async Task<IActionResult> DeleteCategory(long id)
@@ -131,4 +130,5 @@ public class CategoryController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
+    #endregion
 }
