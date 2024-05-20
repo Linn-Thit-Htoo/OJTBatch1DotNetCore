@@ -67,7 +67,6 @@ public class CategoryController : ControllerBase
 
     #region Update Category
 
-    #endregion
     [HttpPut]
     [Route("/api/category/{id}")]
     public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestModel requestModel, long id)
@@ -100,6 +99,7 @@ public class CategoryController : ControllerBase
             throw new Exception(ex.Message);
         }
     }
+    #endregion
 
     [HttpDelete]
     [Route("/api/category/{id}")]
