@@ -13,7 +13,7 @@ public class AdoDotNetService
         _configuration = configuration;
     }
 
-    public List<T> Query<T>(string query, SqlParameter[]? parameters = null) // List<Model> = Query<Model>();
+    public List<T> Query<T>(string query, SqlParameter[]? parameters = null)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
         conn.Open();
