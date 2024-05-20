@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MvcSample.Controllers
+namespace MvcSample.Controllers;
+
+public class TestController : Controller
 {
-    public class TestController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }
