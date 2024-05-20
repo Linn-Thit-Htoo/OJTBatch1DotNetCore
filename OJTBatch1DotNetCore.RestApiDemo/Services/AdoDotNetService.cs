@@ -13,7 +13,7 @@ public class AdoDotNetService
         _configuration = configuration;
     }
 
-    #region MyRegion
+    #region Query
 
     #endregion
     public List<T> Query<T>(string query, SqlParameter[]? parameters = null)
