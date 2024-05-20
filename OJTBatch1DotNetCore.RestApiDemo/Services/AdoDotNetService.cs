@@ -34,6 +34,9 @@ public class AdoDotNetService
 
     #endregion
 
+    #region Query First Or Default
+
+    #endregion
     public DataTable QueryFirstOrDefault(string query, SqlParameter[]? parameters)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
