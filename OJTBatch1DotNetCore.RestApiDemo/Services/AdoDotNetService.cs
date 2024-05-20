@@ -15,7 +15,6 @@ public class AdoDotNetService
 
     #region Query
 
-    #endregion
     public List<T> Query<T>(string query, SqlParameter[]? parameters = null)
     {
         SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
@@ -32,6 +31,7 @@ public class AdoDotNetService
 
         return lst;
     }
+    #endregion
 
     public DataTable QueryFirstOrDefault(string query, SqlParameter[]? parameters)
     {
