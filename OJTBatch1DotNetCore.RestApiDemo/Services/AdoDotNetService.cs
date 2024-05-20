@@ -52,7 +52,7 @@ public class AdoDotNetService
 
     #endregion
 
-    #region MyRegion
+    #region Execute
 
     #endregion
     public int Execute(string query, SqlParameter[]? parameters = null)
