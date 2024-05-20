@@ -35,6 +35,9 @@ public class CategoryController : ControllerBase
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     [HttpPost]
     [Route("/api/category")]
     public async Task<IActionResult> CreateCategory([FromBody] CategoryModel requestModel)
