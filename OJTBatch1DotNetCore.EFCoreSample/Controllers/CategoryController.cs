@@ -102,7 +102,7 @@ public class CategoryController : ControllerBase
 
     #endregion
 
-    #region MyRegion
+    #region Delete Category
 
     #endregion
     [HttpDelete]
