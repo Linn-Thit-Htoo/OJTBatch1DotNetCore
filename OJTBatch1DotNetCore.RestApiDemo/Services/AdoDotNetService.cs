@@ -31,6 +31,7 @@ public class AdoDotNetService
 
         return lst;
     }
+
     #endregion
 
     public DataTable QueryFirstOrDefault(string query, SqlParameter[]? parameters)
