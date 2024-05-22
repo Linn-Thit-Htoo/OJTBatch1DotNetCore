@@ -11,6 +11,7 @@ public static class ExpenseCategoryQuery
       ,[IsActive]
   FROM [dbo].[Rest_Expense_Category] WHERE IsActive = @IsActive ORDER BY ExpenseCategoryId DESC";
     }
+
     #endregion
 
     public static string CheckCreateExpenseCategoryDuplicateQuery()
