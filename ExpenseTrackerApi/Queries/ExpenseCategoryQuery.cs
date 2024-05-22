@@ -72,7 +72,7 @@ ExpenseCategoryId = @ExpenseCategoryId";
 
     #endregion
 
-    #region DeleteExpenseCategoryQuery
+    #region Delete Expense Category Query
 
     #endregion
     public static string DeleteExpenseCategoryQuery()
