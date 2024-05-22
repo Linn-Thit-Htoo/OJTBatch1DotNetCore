@@ -35,6 +35,9 @@ public static class ExpenseCategoryQuery
 
     #endregion
 
+    #region CheckUpdateExpenseCategoryDuplicateQuery
+
+    #endregion
     public static string CheckUpdateExpenseCategoryDuplicateQuery()
     {
         return @"SELECT [ExpenseCategoryId]
