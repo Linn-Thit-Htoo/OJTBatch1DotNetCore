@@ -49,7 +49,7 @@ ExpenseCategoryId != @ExpenseCategoryId";
 
     #endregion
 
-    #region MyRegion
+    #region UpdateExpenseCategoryQuery
 
     #endregion
     public static string UpdateExpenseCategoryQuery()
