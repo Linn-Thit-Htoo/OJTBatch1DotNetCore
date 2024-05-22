@@ -2,7 +2,7 @@
 
 public static class ExpenseCategoryQuery
 {
-    #region MyRegion
+    #region Get Expens eCategory List Query
 
     #endregion
     public static string GetExpenseCategoryListQuery()
