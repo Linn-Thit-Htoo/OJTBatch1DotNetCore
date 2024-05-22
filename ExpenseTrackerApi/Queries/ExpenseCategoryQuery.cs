@@ -14,7 +14,7 @@ public static class ExpenseCategoryQuery
 
     #endregion
 
-    #region MyRegion
+    #region Check Create Expense Category Duplicate Query
 
     #endregion
     public static string CheckCreateExpenseCategoryDuplicateQuery()
