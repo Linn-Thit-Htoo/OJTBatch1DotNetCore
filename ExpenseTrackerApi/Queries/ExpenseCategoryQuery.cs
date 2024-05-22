@@ -2,6 +2,9 @@
 
 public static class ExpenseCategoryQuery
 {
+    #region MyRegion
+
+    #endregion
     public static string GetExpenseCategoryListQuery()
     {
         return @"SELECT [ExpenseCategoryId]
