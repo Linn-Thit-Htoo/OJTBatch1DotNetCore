@@ -78,5 +78,6 @@ ExpenseCategoryId = @ExpenseCategoryId";
     {
         return @"UPDATE Rest_Expense_Category SET IsActive = @IsActive WHERE ExpenseCategoryId = @ExpenseCategoryId";
     }
+
     #endregion
 }
