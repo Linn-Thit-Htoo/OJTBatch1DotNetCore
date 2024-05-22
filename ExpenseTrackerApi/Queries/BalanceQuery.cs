@@ -12,7 +12,7 @@ public static class BalanceQuery
 
     #endregion
 
-    #region MyRegion
+    #region Update Balance Query
 
     #endregion
     public static string UpdateBalanceQuery()
