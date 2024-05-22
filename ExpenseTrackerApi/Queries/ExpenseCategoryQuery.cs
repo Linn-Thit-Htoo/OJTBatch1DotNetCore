@@ -4,7 +4,6 @@ public static class ExpenseCategoryQuery
 {
     #region Get Expens eCategory List Query
 
-    #endregion
     public static string GetExpenseCategoryListQuery()
     {
         return @"SELECT [ExpenseCategoryId]
@@ -12,6 +11,7 @@ public static class ExpenseCategoryQuery
       ,[IsActive]
   FROM [dbo].[Rest_Expense_Category] WHERE IsActive = @IsActive ORDER BY ExpenseCategoryId DESC";
     }
+    #endregion
 
     public static string CheckCreateExpenseCategoryDuplicateQuery()
     {
