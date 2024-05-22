@@ -23,6 +23,7 @@ public static class ExpenseCategoryQuery
       ,[IsActive]
   FROM [dbo].[Rest_Expense_Category] WHERE ExpenseCategoryName = @ExpenseCategoryName AND IsActive = @IsActive";
     }
+
     #endregion
 
     public static string CreateExpenseCategoryQuery()
