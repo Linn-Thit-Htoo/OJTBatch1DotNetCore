@@ -72,6 +72,9 @@ ExpenseCategoryId = @ExpenseCategoryId";
 
     #endregion
 
+    #region DeleteExpenseCategoryQuery
+
+    #endregion
     public static string DeleteExpenseCategoryQuery()
     {
         return @"UPDATE Rest_Expense_Category SET IsActive = @IsActive WHERE ExpenseCategoryId = @ExpenseCategoryId";
