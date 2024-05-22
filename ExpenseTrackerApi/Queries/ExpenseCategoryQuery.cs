@@ -26,6 +26,9 @@ public static class ExpenseCategoryQuery
 
     #endregion
 
+    #region Create Expens eCategory Query
+
+    #endregion
     public static string CreateExpenseCategoryQuery()
     {
         return @"INSERT INTO Rest_Expense_Category (ExpenseCategoryName, IsActive) VALUES (@ExpenseCategoryName, @IsActive)";
