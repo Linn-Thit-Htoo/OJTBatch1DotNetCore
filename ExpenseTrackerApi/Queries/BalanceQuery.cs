@@ -14,10 +14,10 @@ public static class BalanceQuery
 
     #region Update Balance Query
 
-    #endregion
     public static string UpdateBalanceQuery()
     {
         return @"UPDATE Rest_Balance SET Amount = @Amount, UpdateDate = @UpdateDate
 WHERE UserId = @UserId";
     }
+    #endregion
 }
