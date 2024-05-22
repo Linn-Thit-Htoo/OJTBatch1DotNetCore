@@ -59,9 +59,8 @@ ExpenseCategoryId = @ExpenseCategoryId";
 
     #endregion
 
-    #region MyRegion
+    #region Check Expense Category Query
 
-    #endregion
     public static string CheckExpenseCategoryQuery()
     {
         return @"SELECT [ExpenseId]
@@ -70,6 +69,7 @@ ExpenseCategoryId = @ExpenseCategoryId";
       ,[IsActive]
   FROM [dbo].[Rest_Expense] WHERE ExpenseCategoryId = @ExpenseCategoryId";
     }
+    #endregion
 
     public static string DeleteExpenseCategoryQuery()
     {
