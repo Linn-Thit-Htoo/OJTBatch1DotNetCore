@@ -111,6 +111,7 @@
             Name = "CreateCategoryForm";
             Text = "CreateCategoryForm";
             FormClosed += CreateCategoryForm_FormClosed;
+            Load += CreateCategoryForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
