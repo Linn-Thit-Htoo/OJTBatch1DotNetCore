@@ -59,6 +59,9 @@ ExpenseCategoryId = @ExpenseCategoryId";
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string CheckExpenseCategoryQuery()
     {
         return @"SELECT [ExpenseId]
