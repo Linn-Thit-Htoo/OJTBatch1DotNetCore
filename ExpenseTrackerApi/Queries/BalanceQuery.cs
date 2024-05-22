@@ -4,12 +4,12 @@ public static class BalanceQuery
 {
     #region Create Balance Query
 
-    #endregion
     public static string CreateBalanceQuery()
     {
         return @"INSERT INTO Rest_Balance (UserId, Amount, CreateDate)
             VALUES (@UserId, @Amount, @CreateDate)";
     }
+    #endregion
 
     public static string UpdateBalanceQuery()
     {
