@@ -69,6 +69,7 @@ ExpenseCategoryId = @ExpenseCategoryId";
       ,[IsActive]
   FROM [dbo].[Rest_Expense] WHERE ExpenseCategoryId = @ExpenseCategoryId";
     }
+
     #endregion
 
     public static string DeleteExpenseCategoryQuery()
