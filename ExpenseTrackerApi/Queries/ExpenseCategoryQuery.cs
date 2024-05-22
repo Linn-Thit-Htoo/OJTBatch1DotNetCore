@@ -32,6 +32,7 @@ public static class ExpenseCategoryQuery
     {
         return @"INSERT INTO Rest_Expense_Category (ExpenseCategoryName, IsActive) VALUES (@ExpenseCategoryName, @IsActive)";
     }
+
     #endregion
 
     public static string CheckUpdateExpenseCategoryDuplicateQuery()
