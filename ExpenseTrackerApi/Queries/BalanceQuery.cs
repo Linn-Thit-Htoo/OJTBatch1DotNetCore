@@ -9,6 +9,7 @@ public static class BalanceQuery
         return @"INSERT INTO Rest_Balance (UserId, Amount, CreateDate)
             VALUES (@UserId, @Amount, @CreateDate)";
     }
+
     #endregion
 
     public static string UpdateBalanceQuery()
