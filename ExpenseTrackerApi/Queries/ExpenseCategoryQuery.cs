@@ -51,12 +51,12 @@ ExpenseCategoryId != @ExpenseCategoryId";
 
     #region UpdateExpenseCategoryQuery
 
-    #endregion
     public static string UpdateExpenseCategoryQuery()
     {
         return @"UPDATE Rest_Expense_Category SET ExpenseCategoryName = @ExpenseCategoryName WHERE
 ExpenseCategoryId = @ExpenseCategoryId";
     }
+    #endregion
 
     public static string CheckExpenseCategoryQuery()
     {
