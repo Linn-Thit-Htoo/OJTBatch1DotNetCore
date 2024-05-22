@@ -37,7 +37,6 @@ public static class ExpenseCategoryQuery
 
     #region Check Update Expense Category Duplicate Query
 
-    #endregion
     public static string CheckUpdateExpenseCategoryDuplicateQuery()
     {
         return @"SELECT [ExpenseCategoryId]
@@ -47,6 +46,7 @@ public static class ExpenseCategoryQuery
 IsActive = @IsActive AND
 ExpenseCategoryId != @ExpenseCategoryId";
     }
+    #endregion
 
     public static string UpdateExpenseCategoryQuery()
     {
