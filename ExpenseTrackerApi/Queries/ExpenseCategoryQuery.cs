@@ -46,6 +46,7 @@ public static class ExpenseCategoryQuery
 IsActive = @IsActive AND
 ExpenseCategoryId != @ExpenseCategoryId";
     }
+
     #endregion
 
     public static string UpdateExpenseCategoryQuery()
