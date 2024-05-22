@@ -16,7 +16,6 @@ public static class ExpenseCategoryQuery
 
     #region Check Create Expense Category Duplicate Query
 
-    #endregion
     public static string CheckCreateExpenseCategoryDuplicateQuery()
     {
         return @"SELECT [ExpenseCategoryId]
@@ -24,6 +23,7 @@ public static class ExpenseCategoryQuery
       ,[IsActive]
   FROM [dbo].[Rest_Expense_Category] WHERE ExpenseCategoryName = @ExpenseCategoryName AND IsActive = @IsActive";
     }
+    #endregion
 
     public static string CreateExpenseCategoryQuery()
     {
