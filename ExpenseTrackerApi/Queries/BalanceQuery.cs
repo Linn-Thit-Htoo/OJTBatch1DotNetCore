@@ -2,6 +2,9 @@
 
 public static class BalanceQuery
 {
+    #region Create Balance Query
+
+    #endregion
     public static string CreateBalanceQuery()
     {
         return @"INSERT INTO Rest_Balance (UserId, Amount, CreateDate)
