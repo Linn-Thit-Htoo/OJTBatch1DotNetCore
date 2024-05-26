@@ -58,5 +58,6 @@ Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
     {
         return @"UPDATE Rest_Income SET IsActive = @IsActive WHERE IncomeId = @IncomeId";
     }
+
     #endregion
 }
