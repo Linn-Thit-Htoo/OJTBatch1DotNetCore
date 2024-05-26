@@ -17,6 +17,9 @@ ORDER BY ExpenseId DESC";
 
     #endregion
 
+    #region Get Expense Lis tByUserId Query
+
+    #endregion
     public static string GetExpenseListByUserIdQuery()
     {
         return @"SELECT ExpenseId, Rest_Expense_Category.ExpenseCategoryName, Rest_Users.UserName, Amount, Rest_Expense.IsActive,
