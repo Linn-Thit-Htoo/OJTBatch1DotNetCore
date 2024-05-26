@@ -14,7 +14,7 @@ public static class IncomeCategoryQuery
 
     #endregion
 
-    #region CreateIncomeCategoryQuery
+    #region Create Income Category Query
 
     public static string CreateIncomeCategoryQuery()
     {
