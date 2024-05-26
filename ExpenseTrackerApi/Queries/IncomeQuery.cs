@@ -42,6 +42,9 @@ VALUES (@IncomeCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string UpdateIncomeQuery()
     {
         return @"UPDATE Rest_Income SET IncomeCategoryId = @IncomeCategoryId,
