@@ -49,6 +49,7 @@ VALUES (@IncomeCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
         return @"UPDATE Rest_Income SET IncomeCategoryId = @IncomeCategoryId,
 Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
     }
+
     #endregion
 
     public static string DeleteIncomeQuery()
