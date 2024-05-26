@@ -16,12 +16,12 @@ public static class IncomeCategoryQuery
 
     #region CreateIncomeCategoryQuery
 
-    #endregion
     public static string CreateIncomeCategoryQuery()
     {
         return @"INSERT INTO Rest_Income_Category (IncomeCategoryName, IsActive)
 VALUES (@IncomeCategoryName, @IsActive)";
     }
+    #endregion
 
     public static string CheckCreateIncomeCategoryDuplicateQuery()
     {
