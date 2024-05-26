@@ -34,12 +34,12 @@ ORDER BY ExpenseId DESC";
 
     #region Create Expense Query
 
-    #endregion
     public static string CreateExpenseQuery()
     {
         return @"INSERT INTO Rest_Expense (ExpenseCategoryId, UserId, Amount, CreateDate, IsActive)
 VALUES (@ExpenseCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
     }
+    #endregion
 
     public static string UpdateExpenseQuery()
     {
