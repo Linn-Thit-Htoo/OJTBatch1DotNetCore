@@ -52,6 +52,9 @@ Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string DeleteIncomeQuery()
     {
         return @"UPDATE Rest_Income SET IsActive = @IsActive WHERE IncomeId = @IncomeId";
