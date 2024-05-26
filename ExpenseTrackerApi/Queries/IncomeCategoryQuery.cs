@@ -2,6 +2,9 @@
 
 public static class IncomeCategoryQuery
 {
+    #region MyRegion
+
+    #endregion
     public static string GetIncomeCategoryListQuery()
     {
         return @"SELECT [IncomeCategoryId]
