@@ -38,7 +38,6 @@ VALUES (@IncomeCategoryName, @IsActive)";
 
     #region CheckIncomeCategoryDuplicateQuery
 
-    #endregion
     public static string CheckIncomeCategoryDuplicateQuery()
     {
         return @"SELECT [IncomeCategoryId]
@@ -47,6 +46,7 @@ VALUES (@IncomeCategoryName, @IsActive)";
             FROM[dbo].[Rest_Income_Category] WHERE IncomeCategoryName = @IncomeCategoryName AND
           IsActive = @IsActive AND IncomeCategoryId != @IncomeCategoryId";
     }
+    #endregion
 
     public static string UpdateIncomeCategoryQuery()
     {
