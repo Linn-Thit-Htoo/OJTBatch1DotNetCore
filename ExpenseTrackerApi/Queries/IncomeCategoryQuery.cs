@@ -71,6 +71,9 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
     }
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string DeleteIncomeCategoryQuery()
     {
         return @"UPDATE Rest_Income_Category SET IsActive = @IsActive WHERE IncomeCategoryId = @IncomeCategoryId";
