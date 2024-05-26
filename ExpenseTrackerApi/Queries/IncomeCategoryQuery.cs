@@ -59,6 +59,9 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string CheckIncomeCategoryExistsQuery()
     {
         return @"SELECT [IncomeId]
