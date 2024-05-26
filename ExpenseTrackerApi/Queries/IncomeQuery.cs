@@ -2,7 +2,7 @@
 
 public static class IncomeQuery
 {
-    #region MyRegion
+    #region GetIncomeListQuery
 
     #endregion
     public static string GetIncomeListQuery()
