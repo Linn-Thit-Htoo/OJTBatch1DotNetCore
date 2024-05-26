@@ -2,6 +2,9 @@
 
 public static class IncomeQuery
 {
+    #region MyRegion
+
+    #endregion
     public static string GetIncomeListQuery()
     {
         return @"SELECT Rest_Income.IncomeId, Rest_Income.CreateDate, Rest_Users.UserName, Rest_Income_Category.IncomeCategoryName,
