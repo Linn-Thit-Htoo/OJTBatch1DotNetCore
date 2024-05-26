@@ -17,6 +17,9 @@ ORDER BY IncomeId DESC"; ;
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string GetIncomeListByUserIdQuery()
     {
         return @"SELECT Rest_Income.IncomeId, Rest_Income.CreateDate, Rest_Users.UserName, Rest_Income_Category.IncomeCategoryName,
