@@ -32,7 +32,7 @@ ORDER BY IncomeId DESC";
 
     #endregion
 
-    #region MyRegion
+    #region CreateIncomeQuery
 
     #endregion
     public static string CreateIncomeQuery()
