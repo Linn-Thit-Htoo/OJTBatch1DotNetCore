@@ -4,7 +4,6 @@ public static class IncomeCategoryQuery
 {
     #region GetIncomeCategoryListQuery
 
-    #endregion
     public static string GetIncomeCategoryListQuery()
     {
         return @"SELECT [IncomeCategoryId]
@@ -12,6 +11,7 @@ public static class IncomeCategoryQuery
       ,[IsActive]
   FROM [dbo].[Rest_Income_Category] WHERE IsActive = @IsActive ORDER BY IncomeCategoryId DESC";
     }
+    #endregion
 
     public static string CreateIncomeCategoryQuery()
     {
