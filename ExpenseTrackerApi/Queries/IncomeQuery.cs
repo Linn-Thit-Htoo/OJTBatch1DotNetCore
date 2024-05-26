@@ -14,6 +14,7 @@ INNER JOIN Rest_Income_Category ON Rest_Income.IncomeCategoryId = Rest_Income_Ca
 WHERE Rest_Income.IsActive = @IsActive
 ORDER BY IncomeId DESC"; ;
     }
+
     #endregion
 
     public static string GetIncomeListByUserIdQuery()
