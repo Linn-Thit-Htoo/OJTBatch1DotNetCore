@@ -42,7 +42,7 @@ VALUES (@IncomeCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
 
     #endregion
 
-    #region UpdateIncomeQuery
+    #region Update Income Query
 
     #endregion
     public static string UpdateIncomeQuery()
