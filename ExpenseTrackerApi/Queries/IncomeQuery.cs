@@ -19,7 +19,6 @@ ORDER BY IncomeId DESC"; ;
 
     #region GetIncomeListByUserIdQuery
 
-    #endregion
     public static string GetIncomeListByUserIdQuery()
     {
         return @"SELECT Rest_Income.IncomeId, Rest_Income.CreateDate, Rest_Users.UserName, Rest_Income_Category.IncomeCategoryName,
@@ -30,6 +29,7 @@ INNER JOIN Rest_Income_Category ON Rest_Income.IncomeCategoryId = Rest_Income_Ca
 WHERE Rest_Income.IsActive = @IsActive AND Rest_Income.UserId = @UserId
 ORDER BY IncomeId DESC";
     }
+    #endregion
 
     public static string CreateIncomeQuery()
     {
