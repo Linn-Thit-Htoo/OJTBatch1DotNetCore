@@ -36,7 +36,7 @@ VALUES (@IncomeCategoryName, @IsActive)";
 
     #endregion
 
-    #region MyRegion
+    #region CheckIncomeCategoryDuplicateQuery
 
     #endregion
     public static string CheckIncomeCategoryDuplicateQuery()
