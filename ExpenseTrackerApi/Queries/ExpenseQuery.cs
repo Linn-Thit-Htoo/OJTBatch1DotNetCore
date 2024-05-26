@@ -2,6 +2,9 @@
 
 public static class ExpenseQuery
 {
+    #region Get Expense List Query
+
+    #endregion
     public static string GetExpenseListQuery()
     {
         return @"SELECT ExpenseId, Rest_Expense_Category.ExpenseCategoryName, Rest_Users.UserName, Amount, Rest_Expense.IsActive,
