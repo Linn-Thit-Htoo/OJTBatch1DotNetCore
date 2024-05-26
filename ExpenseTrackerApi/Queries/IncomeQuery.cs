@@ -44,12 +44,12 @@ VALUES (@IncomeCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
 
     #region Update Income Query
 
-    #endregion
     public static string UpdateIncomeQuery()
     {
         return @"UPDATE Rest_Income SET IncomeCategoryId = @IncomeCategoryId,
 Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
     }
+    #endregion
 
     public static string DeleteIncomeQuery()
     {
