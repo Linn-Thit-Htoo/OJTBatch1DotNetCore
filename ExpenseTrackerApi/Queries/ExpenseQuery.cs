@@ -54,9 +54,9 @@ Amount = @Amount WHERE ExpenseId = @ExpenseId AND UserId = @UserId";
 
     #region Delete Expense Query
 
-    #endregion
     public static string DeleteExpenseQuery()
     {
         return @"UPDATE Rest_Expense SET IsActive = @IsActive WHERE ExpenseId = @ExpenseId";
     }
+    #endregion
 }
