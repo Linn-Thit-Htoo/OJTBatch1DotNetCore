@@ -17,7 +17,7 @@ ORDER BY IncomeId DESC"; ;
 
     #endregion
 
-    #region MyRegion
+    #region GetIncomeListByUserIdQuery
 
     #endregion
     public static string GetIncomeListByUserIdQuery()
