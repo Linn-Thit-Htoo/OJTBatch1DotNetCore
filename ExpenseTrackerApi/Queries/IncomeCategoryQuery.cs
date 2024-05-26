@@ -2,7 +2,7 @@
 
 public static class IncomeCategoryQuery
 {
-    #region GetIncomeCategoryListQuery
+    #region Get Income Category List Query
 
     public static string GetIncomeCategoryListQuery()
     {
