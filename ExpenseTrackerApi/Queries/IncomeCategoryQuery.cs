@@ -51,12 +51,12 @@ VALUES (@IncomeCategoryName, @IsActive)";
 
     #region UpdateIncomeCategoryQuery
 
-    #endregion
     public static string UpdateIncomeCategoryQuery()
     {
         return @"UPDATE Rest_Income_Category SET IncomeCategoryName = @IncomeCategoryName 
 WHERE IncomeCategoryId = @IncomeCategoryId";
     }
+    #endregion
 
     public static string CheckIncomeCategoryExistsQuery()
     {
