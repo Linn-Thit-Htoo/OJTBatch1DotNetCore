@@ -61,7 +61,6 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
 
     #region CheckIncomeCategoryExistsQuery
 
-    #endregion
     public static string CheckIncomeCategoryExistsQuery()
     {
         return @"SELECT [IncomeId]
@@ -70,6 +69,7 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
       ,[IsActive]
   FROM [dbo].[Rest_Income] WHERE IncomeCategoryId = @IncomeCategoryId";
     }
+    #endregion
 
     public static string DeleteIncomeCategoryQuery()
     {
