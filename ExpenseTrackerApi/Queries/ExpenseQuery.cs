@@ -52,7 +52,7 @@ Amount = @Amount WHERE ExpenseId = @ExpenseId AND UserId = @UserId";
 
     #endregion
 
-    #region MyRegion
+    #region Delete Expense Query
 
     #endregion
     public static string DeleteExpenseQuery()
