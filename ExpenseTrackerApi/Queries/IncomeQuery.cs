@@ -39,6 +39,7 @@ ORDER BY IncomeId DESC";
         return @"INSERT INTO Rest_Income (IncomeCategoryId, UserId, Amount, CreateDate, IsActive)
 VALUES (@IncomeCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
     }
+
     #endregion
 
     public static string UpdateIncomeQuery()
