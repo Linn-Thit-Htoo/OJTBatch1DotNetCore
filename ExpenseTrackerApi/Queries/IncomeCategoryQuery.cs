@@ -49,7 +49,7 @@ VALUES (@IncomeCategoryName, @IsActive)";
 
     #endregion
 
-    #region UpdateIncomeCategoryQuery
+    #region Update Income Category Query
 
     public static string UpdateIncomeCategoryQuery()
     {
