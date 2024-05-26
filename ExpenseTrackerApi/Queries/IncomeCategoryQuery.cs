@@ -77,5 +77,6 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
     {
         return @"UPDATE Rest_Income_Category SET IsActive = @IsActive WHERE IncomeCategoryId = @IncomeCategoryId";
     }
+
     #endregion
 }
