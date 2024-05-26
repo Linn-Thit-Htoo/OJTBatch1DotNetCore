@@ -71,7 +71,7 @@ WHERE IncomeCategoryId = @IncomeCategoryId";
     }
     #endregion
 
-    #region MyRegion
+    #region DeleteIncomeCategoryQuery
 
     #endregion
     public static string DeleteIncomeCategoryQuery()
