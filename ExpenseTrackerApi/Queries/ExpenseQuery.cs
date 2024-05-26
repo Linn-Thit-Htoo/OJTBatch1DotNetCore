@@ -42,6 +42,9 @@ VALUES (@ExpenseCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
 
     #endregion
 
+    #region Update Expense Query
+
+    #endregion
     public static string UpdateExpenseQuery()
     {
         return @"UPDATE Rest_Expense SET ExpenseCategoryId = @ExpenseCategoryId, 
