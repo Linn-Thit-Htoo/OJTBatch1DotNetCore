@@ -14,6 +14,9 @@ public static class IncomeCategoryQuery
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string CreateIncomeCategoryQuery()
     {
         return @"INSERT INTO Rest_Income_Category (IncomeCategoryName, IsActive)
