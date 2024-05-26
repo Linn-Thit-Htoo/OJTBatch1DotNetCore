@@ -21,6 +21,7 @@ public static class IncomeCategoryQuery
         return @"INSERT INTO Rest_Income_Category (IncomeCategoryName, IsActive)
 VALUES (@IncomeCategoryName, @IsActive)";
     }
+
     #endregion
 
     public static string CheckCreateIncomeCategoryDuplicateQuery()
