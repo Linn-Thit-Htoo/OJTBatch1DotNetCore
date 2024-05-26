@@ -52,7 +52,7 @@ Amount = @Amount WHERE IncomeId = @IncomeId AND UserId = @UserId";
 
     #endregion
 
-    #region MyRegion
+    #region DeleteIncomeQuery
 
     #endregion
     public static string DeleteIncomeQuery()
