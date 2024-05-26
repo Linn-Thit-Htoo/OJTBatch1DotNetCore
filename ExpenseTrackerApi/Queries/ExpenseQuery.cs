@@ -49,6 +49,7 @@ VALUES (@ExpenseCategoryId, @UserId, @Amount, @CreateDate, @IsActive)";
         return @"UPDATE Rest_Expense SET ExpenseCategoryId = @ExpenseCategoryId, 
 Amount = @Amount WHERE ExpenseId = @ExpenseId AND UserId = @UserId";
     }
+
     #endregion
 
     public static string DeleteExpenseQuery()
