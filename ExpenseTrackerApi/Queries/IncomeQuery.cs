@@ -32,6 +32,9 @@ ORDER BY IncomeId DESC";
 
     #endregion
 
+    #region MyRegion
+
+    #endregion
     public static string CreateIncomeQuery()
     {
         return @"INSERT INTO Rest_Income (IncomeCategoryId, UserId, Amount, CreateDate, IsActive)
