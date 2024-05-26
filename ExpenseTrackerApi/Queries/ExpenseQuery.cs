@@ -58,5 +58,6 @@ Amount = @Amount WHERE ExpenseId = @ExpenseId AND UserId = @UserId";
     {
         return @"UPDATE Rest_Expense SET IsActive = @IsActive WHERE ExpenseId = @ExpenseId";
     }
+
     #endregion
 }
