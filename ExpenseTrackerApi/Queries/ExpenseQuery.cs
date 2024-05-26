@@ -29,6 +29,7 @@ INNER JOIN Rest_Users ON Rest_Expense.UserId = Rest_Users.UserId
 WHERE Rest_Expense.IsActive = @IsActive AND Rest_Expense.UserId = @UserId
 ORDER BY ExpenseId DESC";
     }
+
     #endregion
 
     public static string CreateExpenseQuery()
