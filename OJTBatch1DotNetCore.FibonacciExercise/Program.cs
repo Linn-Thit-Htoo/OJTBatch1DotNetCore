@@ -1,26 +1,29 @@
-﻿public class Program
+﻿namespace OJTBatch1DotNetCore.FibonacciExercise
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        //  0, 1, 1, 2, 3, 5
-        int firstNum = 0;
-        int secondNum = 1;
-
-        for (int i = 1; i <= 10; i++)
+        public static void Main(string[] args)
         {
-            int sum = firstNum + secondNum; // 1, 2, 3, 5
-            if (i == 1)
+            //  0, 1, 1, 2, 3, 5
+            int firstNum = 0;
+            int secondNum = 1;
+
+            for (int i = 1; i <= 10; i++)
             {
-                Console.Write($"{firstNum}, {secondNum}, {sum}, "); // 0, 1, 1
-                //Console.Write($"{firstNum}, {secondNum}, {sum} "); // 0, 1, 1
+                int sum = firstNum + secondNum; // 1, 2, 3, 5
+                if (i == 1)
+                {
+                    Console.Write($"{firstNum}, {secondNum}, {sum}, "); // 0, 1, 1
+                                                                        //Console.Write($"{firstNum}, {secondNum}, {sum} "); // 0, 1, 1
+                }
+                else
+                {
+                    Console.Write(i == 10 ? sum : sum + ", ");
+                    //Console.Write(", " + sum);
+                }
+                firstNum = secondNum;
+                secondNum = sum;
             }
-            else
-            {
-                Console.Write(i == 10 ? sum : sum + ", ");
-                //Console.Write(", " + sum);
-            }
-            firstNum = secondNum;
-            secondNum = sum;
         }
     }
 }
