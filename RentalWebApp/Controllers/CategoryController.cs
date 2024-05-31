@@ -6,52 +6,20 @@ using RentalWebApp.Services;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace RentalWebApp.Controllers
+namespace RentalWebApp.Controllers;
+
+public class CategoryController : Controller
 {
-    public class CategoryController : Controller
+    public readonly IConfiguration _configuration;
+
+    public CategoryController(IConfiguration configuration)
     {
-        public readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public CategoryController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public IActionResult CategoryManagement()
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
-                {
-                    TempData["error"] = "Please login first!";
-                    return RedirectToAction("LoginPage", "User");
-                }
-
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"SELECT [CategoryId]
-      ,[CategoryName]
-      ,[IsActive]
-  FROM [dbo].[Category] WHERE IsActive = @IsActive";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                SqlDataAdapter adapter = new(cmd);
-                DataTable dt = new();
-                adapter.Fill(dt);
-                conn.Close();
-
-                string jsonStr = JsonConvert.SerializeObject(dt);
-                List<CategoryDataModel> lst = JsonConvert.DeserializeObject<List<CategoryDataModel>>(jsonStr)!;
-
-                return View(lst);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public IActionResult CreateCategory()
+    public IActionResult CategoryManagement()
+    {
+        try
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
             {
@@ -59,204 +27,235 @@ namespace RentalWebApp.Controllers
                 return RedirectToAction("LoginPage", "User");
             }
 
-            return View();
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"SELECT [CategoryId]
+      ,[CategoryName]
+      ,[IsActive]
+  FROM [dbo].[Category] WHERE IsActive = @IsActive";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            SqlDataAdapter adapter = new(cmd);
+            DataTable dt = new();
+            adapter.Fill(dt);
+            conn.Close();
+
+            string jsonStr = JsonConvert.SerializeObject(dt);
+            List<CategoryDataModel> lst = JsonConvert.DeserializeObject<List<CategoryDataModel>>(jsonStr)!;
+
+            return View(lst);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public IActionResult CreateCategory()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+        {
+            TempData["error"] = "Please login first!";
+            return RedirectToAction("LoginPage", "User");
         }
 
-        [HttpPost]
-        public IActionResult Create(CreateCategoryRequestModel requestModel)
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(CreateCategoryRequestModel requestModel)
+    {
+        try
         {
-            try
-            {
-                string duplicateTestingQuery = @"SELECT [CategoryId]
+            string duplicateTestingQuery = @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE CategoryName = @CategoryName AND IsActive = @IsActive";
-                List<SqlParameter> parameters = new()
-                {
-                    new("@CategoryName", requestModel.CategoryName),
-                    new("@IsActive", true)
-                };
-                DataTable category = IsDuplicate(duplicateTestingQuery, parameters.ToArray());
-                if (category.Rows.Count > 0)
-                {
-                    TempData["error"] = "Category Name already exists!";
-                    return RedirectToAction("CategoryManagement");
-                }
-
-                // create case
-                string query = @"INSERT INTO Category (CategoryName, IsActive) VALUES (@CategoryName, @IsActive)";
-                List<SqlParameter> createParams = new()
-                {
-                    new("@CategoryName", requestModel.CategoryName),
-                    new("@IsActive", true)
-                };
-                int result = DbHelper.Execute(query, createParams.ToArray());
-
-                if (result > 0)
-                {
-                    TempData["success"] = "Creating Successful!";
-                }
-                else
-                {
-                    TempData["error"] = "Creating Fail!";
-                }
+            List<SqlParameter> parameters = new()
+            {
+                new("@CategoryName", requestModel.CategoryName),
+                new("@IsActive", true)
+            };
+            DataTable category = IsDuplicate(duplicateTestingQuery, parameters.ToArray());
+            if (category.Rows.Count > 0)
+            {
+                TempData["error"] = "Category Name already exists!";
                 return RedirectToAction("CategoryManagement");
             }
-            catch (Exception ex)
+
+            // create case
+            string query = @"INSERT INTO Category (CategoryName, IsActive) VALUES (@CategoryName, @IsActive)";
+            List<SqlParameter> createParams = new()
             {
-                throw new Exception(ex.Message);
+                new("@CategoryName", requestModel.CategoryName),
+                new("@IsActive", true)
+            };
+            int result = DbHelper.Execute(query, createParams.ToArray());
+
+            if (result > 0)
+            {
+                TempData["success"] = "Creating Successful!";
             }
-        }
-
-        public IActionResult EditCategory(long id)
-        {
-            try
+            else
             {
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
-                {
-                    TempData["error"] = "Please login first!";
-                    return RedirectToAction("LoginPage", "User");
-                }
+                TempData["error"] = "Creating Fail!";
+            }
+            return RedirectToAction("CategoryManagement");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
 
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"SELECT [CategoryId]
+    public IActionResult EditCategory(long id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage", "User");
+            }
+
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE CategoryId = @CategoryId AND IsActive = @IsActive";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@CategoryId", id);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                SqlDataAdapter adapter = new(cmd);
-                DataTable dt = new();
-                adapter.Fill(dt);
-                conn.Close();
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@CategoryId", id);
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            SqlDataAdapter adapter = new(cmd);
+            DataTable dt = new();
+            adapter.Fill(dt);
+            conn.Close();
 
-                CategoryDataModel dataModel = new()
-                {
-                    CategoryId = Convert.ToInt64(dt.Rows[0]["CategoryId"]),
-                    CategoryName = Convert.ToString(dt.Rows[0]["CategoryName"])!
-                };
-
-                return View(dataModel);
-            }
-            catch (Exception ex)
+            CategoryDataModel dataModel = new()
             {
-                throw new Exception(ex.Message);
-            }
+                CategoryId = Convert.ToInt64(dt.Rows[0]["CategoryId"]),
+                CategoryName = Convert.ToString(dt.Rows[0]["CategoryName"])!
+            };
+
+            return View(dataModel);
         }
-
-        [HttpPost]
-        public IActionResult Update(UpdateCategoryRequestModel requestModel)
+        catch (Exception ex)
         {
-            try
-            {
-                string duplicateTestingQuery = @"SELECT [CategoryId]
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public IActionResult Update(UpdateCategoryRequestModel requestModel)
+    {
+        try
+        {
+            string duplicateTestingQuery = @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE CategoryName = @CategoryName AND IsActive = @IsActive AND CategoryId != @CategoryId";
-                List<SqlParameter> parameters = new()
-                {
-                    new("@CategoryName", requestModel.CategoryName),
-                    new("@IsActive", true),
-                    new("@CategoryId", requestModel.CategoryId)
-                };
-                DataTable category = IsDuplicate(duplicateTestingQuery, parameters.ToArray());
-                if (category.Rows.Count > 0)
-                {
-                    TempData["error"] = "Category Name already exists!";
-                    return RedirectToAction("CategoryManagement");
-                }
-
-                // update case
-                string query = @"UPDATE Category SET CategoryName = @CategoryName
-WHERE CategoryId = @CategoryId";
-                List<SqlParameter> updateParams = new()
-                {
-                    new("@CategoryName", requestModel.CategoryName),
-                    new("@CategoryId", requestModel.CategoryId)
-                };
-                int result = DbHelper.Execute(query, updateParams.ToArray());
-
-                if (result > 0)
-                {
-                    TempData["success"] = "Updating Successful!";
-                }
-                else
-                {
-                    TempData["error"] = "Updating Fail!";
-                }
-
+            List<SqlParameter> parameters = new()
+            {
+                new("@CategoryName", requestModel.CategoryName),
+                new("@IsActive", true),
+                new("@CategoryId", requestModel.CategoryId)
+            };
+            DataTable category = IsDuplicate(duplicateTestingQuery, parameters.ToArray());
+            if (category.Rows.Count > 0)
+            {
+                TempData["error"] = "Category Name already exists!";
                 return RedirectToAction("CategoryManagement");
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
 
-        public IActionResult Delete(long id)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
-                {
-                    TempData["error"] = "Please login first!";
-                    return RedirectToAction("LoginPage", "User");
-                }
-
-                string query1 = @"SELECT AssetId, CategoryId, AssetName FROM Asset WHERE CategoryId = @CategoryId";
-                DataTable dt1 = DbHelper.Query(query1, new SqlParameter("@CategoryId", id));
-                if (dt1.Rows.Count > 0)
-                {
-                    TempData["error"] = "Cannot Delete!";
-                    return RedirectToAction("CategoryManagement");
-                }
-
-                string query = @"UPDATE Category SET IsActive = @IsActive
+            // update case
+            string query = @"UPDATE Category SET CategoryName = @CategoryName
 WHERE CategoryId = @CategoryId";
-                List<SqlParameter> deleteParams = new()
-                {
-                    new("@IsActive", false),
-                    new("@CategoryId", id)
-                };
-                int result = DbHelper.Execute(query, deleteParams.ToArray());
+            List<SqlParameter> updateParams = new()
+            {
+                new("@CategoryName", requestModel.CategoryName),
+                new("@CategoryId", requestModel.CategoryId)
+            };
+            int result = DbHelper.Execute(query, updateParams.ToArray());
 
-                if (result > 0)
-                {
-                    TempData["success"] = "Deleting Successful!";
-                }
-                else
-                {
-                    TempData["error"] = "Deleting Fail!";
-                }
+            if (result > 0)
+            {
+                TempData["success"] = "Updating Successful!";
+            }
+            else
+            {
+                TempData["error"] = "Updating Fail!";
+            }
+
+            return RedirectToAction("CategoryManagement");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public IActionResult Delete(long id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage", "User");
+            }
+
+            string query1 = @"SELECT AssetId, CategoryId, AssetName FROM Asset WHERE CategoryId = @CategoryId";
+            DataTable dt1 = DbHelper.Query(query1, new SqlParameter("@CategoryId", id));
+            if (dt1.Rows.Count > 0)
+            {
+                TempData["error"] = "Cannot Delete!";
                 return RedirectToAction("CategoryManagement");
             }
-            catch (Exception ex)
+
+            string query = @"UPDATE Category SET IsActive = @IsActive
+WHERE CategoryId = @CategoryId";
+            List<SqlParameter> deleteParams = new()
             {
-                throw new Exception(ex.Message);
+                new("@IsActive", false),
+                new("@CategoryId", id)
+            };
+            int result = DbHelper.Execute(query, deleteParams.ToArray());
+
+            if (result > 0)
+            {
+                TempData["success"] = "Deleting Successful!";
             }
+            else
+            {
+                TempData["error"] = "Deleting Fail!";
+            }
+            return RedirectToAction("CategoryManagement");
         }
-
-        private DataTable IsDuplicate(string query, params SqlParameter[] sqlParameters)
+        catch (Exception ex)
         {
-            try
-            {
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddRange(sqlParameters);
-                SqlDataAdapter adapter = new(cmd);
-                DataTable dt = new();
-                adapter.Fill(dt);
-                conn.Close();
+            throw new Exception(ex.Message);
+        }
+    }
 
-                return dt;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+    private DataTable IsDuplicate(string query, params SqlParameter[] sqlParameters)
+    {
+        try
+        {
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddRange(sqlParameters);
+            SqlDataAdapter adapter = new(cmd);
+            DataTable dt = new();
+            adapter.Fill(dt);
+            conn.Close();
+
+            return dt;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
         }
     }
 }
