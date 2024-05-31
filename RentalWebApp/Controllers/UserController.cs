@@ -7,29 +7,29 @@ using RentalWebApp.Services;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace RentalWebApp.Controllers
+namespace RentalWebApp.Controllers;
+
+public class UserController : Controller
 {
-    public class UserController : Controller
+    private readonly IConfiguration _configuration;
+
+    public UserController(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public UserController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+    [ActionName("LoginPage")]
+    public IActionResult GoToLoginPage()
+    {
+        return View();
+    }
 
-        [ActionName("LoginPage")]
-        public IActionResult GoToLoginPage()
+    [HttpPost]
+    public IActionResult Login(LoginRequestModel requestModel)
+    {
+        try
         {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Login(LoginRequestModel requestModel)
-        {
-            try
-            {
-                string query = @"SELECT [UserId]
+            string query = @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
@@ -37,68 +37,32 @@ namespace RentalWebApp.Controllers
       ,[IsActive]
   FROM [dbo].[Users] WHERE PhoneNumber = @PhoneNumber AND Password = @Password AND UserRole = @UserRole AND
 IsActive = @IsActive";
-                List<SqlParameter> parameters = new()
-                {
-                    new("@PhoneNumber", requestModel.PhoneNumber),
-                    new("@Password", requestModel.Password),
-                    new("@UserRole", "admin"),
-                    new("@IsActive", true)
-                };
-                DataTable user = DbHelper.Query(query, parameters.ToArray());
-                if (user.Rows.Count == 0)
-                {
-                    TempData["error"] = "Login Fail!";
-                    return RedirectToAction("LoginPage");
-                }
-
-                HttpContext.Session.SetString("name", user.Rows[0]["UserName"].ToString()!);
-                return RedirectToAction("UserManagement");
-            }
-            catch (Exception ex)
+            List<SqlParameter> parameters = new()
             {
-                throw new Exception(ex.Message);
+                new("@PhoneNumber", requestModel.PhoneNumber),
+                new("@Password", requestModel.Password),
+                new("@UserRole", "admin"),
+                new("@IsActive", true)
+            };
+            DataTable user = DbHelper.Query(query, parameters.ToArray());
+            if (user.Rows.Count == 0)
+            {
+                TempData["error"] = "Login Fail!";
+                return RedirectToAction("LoginPage");
             }
-        }
 
-        public IActionResult UserManagement()
+            HttpContext.Session.SetString("name", user.Rows[0]["UserName"].ToString()!);
+            return RedirectToAction("UserManagement");
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
-                {
-                    TempData["error"] = "Please login first!";
-                    return RedirectToAction("LoginPage");
-                }
-
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"SELECT [UserId]
-      ,[MemberId]
-      ,[UserName]
-      ,[PhoneNumber]
-      ,[UserRole]
-      ,[IsActive]
-  FROM [dbo].[Users] WHERE IsActive = @IsActive ORDER BY UserId DESC";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                SqlDataAdapter adapter = new(cmd);
-                DataTable dt = new();
-                adapter.Fill(dt);
-                conn.Close();
-
-                string jsonStr = JsonConvert.SerializeObject(dt); // convert to json
-                List<UserResponseModel> lst = JsonConvert.DeserializeObject<List<UserResponseModel>>(jsonStr)!;
-
-                return View(lst);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
+    }
 
-        [ActionName("CreateUser")]
-        public IActionResult GoToCreateUserPage()
+    public IActionResult UserManagement()
+    {
+        try
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
             {
@@ -106,261 +70,296 @@ IsActive = @IsActive";
                 return RedirectToAction("LoginPage");
             }
 
-            return View();
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"SELECT [UserId]
+      ,[MemberId]
+      ,[UserName]
+      ,[PhoneNumber]
+      ,[UserRole]
+      ,[IsActive]
+  FROM [dbo].[Users] WHERE IsActive = @IsActive ORDER BY UserId DESC";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            SqlDataAdapter adapter = new(cmd);
+            DataTable dt = new();
+            adapter.Fill(dt);
+            conn.Close();
+
+            string jsonStr = JsonConvert.SerializeObject(dt); // convert to json
+            List<UserResponseModel> lst = JsonConvert.DeserializeObject<List<UserResponseModel>>(jsonStr)!;
+
+            return View(lst);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    [ActionName("CreateUser")]
+    public IActionResult GoToCreateUserPage()
+    {
+        if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+        {
+            TempData["error"] = "Please login first!";
+            return RedirectToAction("LoginPage");
         }
 
-        [HttpPost]
-        public IActionResult Create(UserDataModel dataModel)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(dataModel.MemberId))
-                    goto Fail;
-                else if (string.IsNullOrEmpty(dataModel.UserName))
-                    goto Fail;
-                else if (string.IsNullOrEmpty(dataModel.PhoneNumber))
-                    goto Fail;
-                else if (dataModel.MemberId.Length > 6)
-                {
-                    TempData["error"] = "Member ID must be 6 letters long";
-                    return RedirectToAction("UserManagement");
-                }
+        return View();
+    }
 
-                string duplicateTestingQuery = @"SELECT [UserId]
+    [HttpPost]
+    public IActionResult Create(UserDataModel dataModel)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(dataModel.MemberId))
+                goto Fail;
+            else if (string.IsNullOrEmpty(dataModel.UserName))
+                goto Fail;
+            else if (string.IsNullOrEmpty(dataModel.PhoneNumber))
+                goto Fail;
+            else if (dataModel.MemberId.Length > 6)
+            {
+                TempData["error"] = "Member ID must be 6 letters long";
+                return RedirectToAction("UserManagement");
+            }
+
+            string duplicateTestingQuery = @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE IsActive = @IsActive AND MemberId = @MemberId";
-                List<SqlParameter> sqlParameters = new()
-                {
-                     new("@IsActive", true),
-                     new("@MemberId", dataModel.MemberId)
-                };
-                DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
+            List<SqlParameter> sqlParameters = new()
+            {
+                 new("@IsActive", true),
+                 new("@MemberId", dataModel.MemberId)
+            };
+            DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
 
-                if (user.Rows.Count > 0)
-                {
-                    TempData["error"] = "Memeber ID already exists";
-                    return RedirectToAction("UserManagement");
-                }
-
-                if (IsPhoneNumberDuplicate(dataModel.PhoneNumber))
-                {
-                    TempData["error"] = "User with this phone number already exists!";
-                    return RedirectToAction("UserManagement");
-                }
-
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"INSERT INTO Users (MemberId, UserName, PhoneNumber, UserRole, IsActive)
-VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@MemberId", dataModel.MemberId);
-                cmd.Parameters.AddWithValue("@UserName", dataModel.UserName);
-                cmd.Parameters.AddWithValue("@PhoneNumber", dataModel.PhoneNumber);
-                cmd.Parameters.AddWithValue("@UserRole", "user");
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                int result = cmd.ExecuteNonQuery();
-                conn.Close();
-
-                if (result > 0)
-                {
-                    TempData["success"] = "Creating Successful!";
-                    return RedirectToAction("UserManagement");
-                }
-
-            Fail:
-                TempData["error"] = "Please fill all fields...";
+            if (user.Rows.Count > 0)
+            {
+                TempData["error"] = "Memeber ID already exists";
                 return RedirectToAction("UserManagement");
             }
-            catch (Exception ex)
+
+            if (IsPhoneNumberDuplicate(dataModel.PhoneNumber))
             {
-                throw new Exception(ex.Message);
+                TempData["error"] = "User with this phone number already exists!";
+                return RedirectToAction("UserManagement");
             }
-        }
 
-        public IActionResult EditUser(long id)
-        {
-            try
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"INSERT INTO Users (MemberId, UserName, PhoneNumber, UserRole, IsActive)
+VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@MemberId", dataModel.MemberId);
+            cmd.Parameters.AddWithValue("@UserName", dataModel.UserName);
+            cmd.Parameters.AddWithValue("@PhoneNumber", dataModel.PhoneNumber);
+            cmd.Parameters.AddWithValue("@UserRole", "user");
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            int result = cmd.ExecuteNonQuery();
+            conn.Close();
+
+            if (result > 0)
             {
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
-                {
-                    TempData["error"] = "Please login first!";
-                    return RedirectToAction("LoginPage");
-                }
+                TempData["success"] = "Creating Successful!";
+                return RedirectToAction("UserManagement");
+            }
 
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"SELECT [UserId]
+        Fail:
+            TempData["error"] = "Please fill all fields...";
+            return RedirectToAction("UserManagement");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    public IActionResult EditUser(long id)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage");
+            }
+
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"SELECT [UserId]
       ,[UserName]
       ,[MemberId]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE UserId = @UserId AND IsActive = @IsActive";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@UserId", id);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                SqlDataAdapter adapter = new(cmd);
-                DataTable dt = new();
-                adapter.Fill(dt);
-                conn.Close();
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@UserId", id);
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            SqlDataAdapter adapter = new(cmd);
+            DataTable dt = new();
+            adapter.Fill(dt);
+            conn.Close();
 
-                string jsonStr = JsonConvert.SerializeObject(dt);
-                List<UserDataModel> user = JsonConvert.DeserializeObject<List<UserDataModel>>(jsonStr)!;
+            string jsonStr = JsonConvert.SerializeObject(dt);
+            List<UserDataModel> user = JsonConvert.DeserializeObject<List<UserDataModel>>(jsonStr)!;
 
-                return View(user);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return View(user);
         }
-
-        [HttpPost]
-        public IActionResult Update(UpdateUserRequestModel requestModel)
+        catch (Exception ex)
         {
-            try
-            {
-                if (IsPhoneNumberDuplicate(requestModel.PhoneNumber, requestModel.UserId))
-                {
-                    TempData["error"] = "User with this phone already exists!";
-                    return RedirectToAction("UserManagement");
-                }
+            throw new Exception(ex.Message);
+        }
+    }
 
-                string duplicateTestingQuery = @"SELECT [UserId]
+    [HttpPost]
+    public IActionResult Update(UpdateUserRequestModel requestModel)
+    {
+        try
+        {
+            if (IsPhoneNumberDuplicate(requestModel.PhoneNumber, requestModel.UserId))
+            {
+                TempData["error"] = "User with this phone already exists!";
+                return RedirectToAction("UserManagement");
+            }
+
+            string duplicateTestingQuery = @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE IsActive = @IsActive AND MemberId = @MemberId AND UserId != @UserId";
-                List<SqlParameter> sqlParameters = new()
-                {
-                     new("@IsActive", true),
-                     new("@MemberId", requestModel.MemberId),
-                     new("@UserId", requestModel.UserId)
-                };
-                DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
+            List<SqlParameter> sqlParameters = new()
+            {
+                 new("@IsActive", true),
+                 new("@MemberId", requestModel.MemberId),
+                 new("@UserId", requestModel.UserId)
+            };
+            DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
 
-                if (user.Rows.Count > 0)
-                {
-                    TempData["error"] = "Memeber ID already exists";
-                    return RedirectToAction("UserManagement");
-                }
+            if (user.Rows.Count > 0)
+            {
+                TempData["error"] = "Memeber ID already exists";
+                return RedirectToAction("UserManagement");
+            }
 
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"UPDATE Users SET UserName = @UserName, PhoneNumber = @PhoneNumber
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"UPDATE Users SET UserName = @UserName, PhoneNumber = @PhoneNumber
 WHERE UserId = @UserId AND IsActive = @IsActive";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@UserId", requestModel.UserId);
-                cmd.Parameters.AddWithValue("@UserName", requestModel.UserName);
-                cmd.Parameters.AddWithValue("@PhoneNumber", requestModel.PhoneNumber);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                int result = cmd.ExecuteNonQuery();
-                conn.Close();
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@UserId", requestModel.UserId);
+            cmd.Parameters.AddWithValue("@UserName", requestModel.UserName);
+            cmd.Parameters.AddWithValue("@PhoneNumber", requestModel.PhoneNumber);
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            int result = cmd.ExecuteNonQuery();
+            conn.Close();
 
-                if (result > 0)
-                {
-                    TempData["success"] = "Updating Successful!";
-                }
-                else
-                {
-                    TempData["error"] = "Updating Fail!";
-                }
-
-                return RedirectToAction("UserManagement");
-            }
-            catch (Exception ex)
+            if (result > 0)
             {
-                throw new Exception(ex.Message);
+                TempData["success"] = "Updating Successful!";
             }
+            else
+            {
+                TempData["error"] = "Updating Fail!";
+            }
+
+            return RedirectToAction("UserManagement");
         }
-
-        public IActionResult Delete(long id)
+        catch (Exception ex)
         {
-            try
-            {
-
-                if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
-                {
-                    TempData["error"] = "Please login first!";
-                    return RedirectToAction("LoginPage");
-                }
-
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = @"UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@UserId", id);
-                cmd.Parameters.AddWithValue("@IsActive", false);
-                int result = cmd.ExecuteNonQuery();
-                conn.Close();
-
-                if (result > 0)
-                {
-                    TempData["success"] = "Deleting Successful!";
-                }
-                else
-                {
-                    TempData["error"] = "Deleting Fail!";
-                }
-                return RedirectToAction("UserManagement");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            throw new Exception(ex.Message);
         }
+    }
 
-        private bool IsPhoneNumberDuplicate(string phoneNumber, long? id = 0)
+    public IActionResult Delete(long id)
+    {
+        try
         {
-            try
-            {
-                SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
-                conn.Open();
-                string query = "";
 
-                // create case
-                if (id == 0)
-                {
-                    query = @"SELECT [UserId]
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
+            {
+                TempData["error"] = "Please login first!";
+                return RedirectToAction("LoginPage");
+            }
+
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = @"UPDATE Users SET IsActive = @IsActive WHERE UserId = @UserId";
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@UserId", id);
+            cmd.Parameters.AddWithValue("@IsActive", false);
+            int result = cmd.ExecuteNonQuery();
+            conn.Close();
+
+            if (result > 0)
+            {
+                TempData["success"] = "Deleting Successful!";
+            }
+            else
+            {
+                TempData["error"] = "Deleting Fail!";
+            }
+            return RedirectToAction("UserManagement");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
+    private bool IsPhoneNumberDuplicate(string phoneNumber, long? id = 0)
+    {
+        try
+        {
+            SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
+            conn.Open();
+            string query = "";
+
+            // create case
+            if (id == 0)
+            {
+                query = @"SELECT [UserId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE PhoneNumber = @PhoneNumber AND IsActive = @IsActive";
-                }
-                else
-                {
-                    query = @"SELECT [UserId]
+            }
+            else
+            {
+                query = @"SELECT [UserId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE UserId != @UserId AND PhoneNumber = @PhoneNumber AND IsActive = @IsActive";
-                }
-                SqlCommand cmd = new(query, conn);
-                cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
-                cmd.Parameters.AddWithValue("@IsActive", true);
-                if (id != 0)
-                {
-                    cmd.Parameters.AddWithValue("@UserId", id);
-                }
-                SqlDataAdapter adapter = new(cmd);
-                DataTable dt = new();
-                adapter.Fill(dt);
-                conn.Close();
-
-                return dt.Rows.Count > 0;
             }
-            catch (Exception ex)
+            SqlCommand cmd = new(query, conn);
+            cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+            cmd.Parameters.AddWithValue("@IsActive", true);
+            if (id != 0)
             {
-                throw new Exception(ex.Message);
+                cmd.Parameters.AddWithValue("@UserId", id);
             }
+            SqlDataAdapter adapter = new(cmd);
+            DataTable dt = new();
+            adapter.Fill(dt);
+            conn.Close();
+
+            return dt.Rows.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
         }
     }
 }
