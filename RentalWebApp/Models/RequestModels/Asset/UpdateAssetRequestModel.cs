@@ -6,7 +6,7 @@
         public long CategoryId { get; set; }
         public string AssetCode { get; set; } = null!;
         public string AssetName { get; set; } = null!;
-        public string AssetStatus { get; set; }
+        public string AssetStatus { get; set; } = null!;
         public int Quantity { get; set; }
     }
 }
