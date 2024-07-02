@@ -106,4 +106,9 @@ public partial class CategoryManagementForm : Form
             throw new Exception(ex.Message);
         }
     }
+
+    private void panel1_Paint(object sender, PaintEventArgs e)
+    {
+
+    }
 }
