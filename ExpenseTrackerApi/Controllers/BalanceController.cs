@@ -1,9 +1,9 @@
-﻿using ExpenseTrackerApi.Models.RequestModels.Balance;
+﻿using System.Data;
+using System.Data.SqlClient;
+using ExpenseTrackerApi.Models.RequestModels.Balance;
 using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -29,22 +29,27 @@ public class BalanceController : ControllerBase
                 return BadRequest("Amount cannot be empty.");
 
             string checkUserQuery = UserQuery.CheckUserEixstsQuery();
-            List<SqlParameter> checkUserParams = new()
-            {
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@IsActive", true)
-            };
-            DataTable user = _service.QueryFirstOrDefault(checkUserQuery, checkUserParams.ToArray());
+            List<SqlParameter> checkUserParams =
+                new()
+                {
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@IsActive", true)
+                };
+            DataTable user = _service.QueryFirstOrDefault(
+                checkUserQuery,
+                checkUserParams.ToArray()
+            );
             if (user.Rows.Count == 0)
                 return NotFound("User not found.");
 
             string balanceUpdateQuery = BalanceQuery.UpdateBalanceQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@Amount", requestModel.Amount),
-                new SqlParameter("@UpdateDate", DateTime.Now)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@Amount", requestModel.Amount),
+                    new SqlParameter("@UpdateDate", DateTime.Now)
+                };
             int result = _service.Execute(balanceUpdateQuery, parameters.ToArray());
 
             return result > 0 ? StatusCode(202, "Balance Updated.") : BadRequest("Updating Fail.");
