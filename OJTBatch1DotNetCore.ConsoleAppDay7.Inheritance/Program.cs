@@ -8,6 +8,7 @@ public class Animal
 
     public void MakeSound() => Console.WriteLine("Animal is making sound...");
 }
+
 public class Dog : Animal
 {
     public void SetColor(string color)
@@ -15,6 +16,7 @@ public class Dog : Animal
         _color = color;
     }
 }
+
 public class Program
 {
     public static void Main(string[] args)
