@@ -12,7 +12,8 @@ FROM Rest_Income
 INNER JOIN Rest_Users ON Rest_Income.UserId = Rest_Users.UserId
 INNER JOIN Rest_Income_Category ON Rest_Income.IncomeCategoryId = Rest_Income_Category.IncomeCategoryId
 WHERE Rest_Income.IsActive = @IsActive
-ORDER BY IncomeId DESC"; ;
+ORDER BY IncomeId DESC";
+        ;
     }
 
     #endregion
