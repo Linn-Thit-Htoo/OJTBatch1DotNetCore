@@ -3,6 +3,7 @@
 public abstract class Animal
 {
     public abstract void MakeSound();
+
     public void Eat() => Console.WriteLine("Animal is eating..");
 }
 
@@ -13,6 +14,7 @@ public class Dog : Animal
         Console.WriteLine("Dog is barking...");
     }
 }
+
 public class Program
 {
     public static void Main(string[] args)
