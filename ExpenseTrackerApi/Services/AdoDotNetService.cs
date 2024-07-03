@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
+using Newtonsoft.Json;
 
 namespace ExpenseTrackerApi.Services;
 
