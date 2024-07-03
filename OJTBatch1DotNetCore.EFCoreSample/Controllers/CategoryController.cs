@@ -22,8 +22,8 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            List<CategoryModel> lst = await _appDbContext.Categories
-                .AsNoTracking() // with no lock
+            List<CategoryModel> lst = await _appDbContext
+                .Categories.AsNoTracking() // with no lock
                 .ToListAsync();
             return Ok(lst);
         }
@@ -46,16 +46,20 @@ public class CategoryController : ControllerBase
             if (string.IsNullOrEmpty(requestModel.CategoryName))
                 return BadRequest();
 
-            var item = await _appDbContext.Categories
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.CategoryName == requestModel.CategoryName && x.IsActive);
+            var item = await _appDbContext
+                .Categories.AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                    x.CategoryName == requestModel.CategoryName && x.IsActive
+                );
             if (item is not null)
                 return Conflict("Category Name already exists!");
 
             await _appDbContext.Categories.AddAsync(requestModel);
             int result = await _appDbContext.SaveChangesAsync();
 
-            return result > 0 ? StatusCode(201, "Creating Successful!") : BadRequest("Creating Fail!");
+            return result > 0
+                ? StatusCode(201, "Creating Successful!")
+                : BadRequest("Creating Fail!");
         }
         catch (Exception ex)
         {
@@ -69,21 +73,26 @@ public class CategoryController : ControllerBase
 
     [HttpPut]
     [Route("/api/category/{id}")]
-    public async Task<IActionResult> UpdateCategory([FromBody] CategoryRequestModel requestModel, long id)
+    public async Task<IActionResult> UpdateCategory(
+        [FromBody] CategoryRequestModel requestModel,
+        long id
+    )
     {
         try
         {
             if (string.IsNullOrEmpty(requestModel.CategoryName) || id <= 0)
                 return BadRequest();
 
-            bool isDuplicate = await _appDbContext.Categories
-                .AsNoTracking()
-                .AnyAsync(x => x.CategoryName == requestModel.CategoryName && x.IsActive && x.CategoryId != id);
+            bool isDuplicate = await _appDbContext
+                .Categories.AsNoTracking()
+                .AnyAsync(x =>
+                    x.CategoryName == requestModel.CategoryName && x.IsActive && x.CategoryId != id
+                );
             if (isDuplicate)
                 return Conflict("Category Name already exists!");
 
-            var item = await _appDbContext.Categories
-                .AsNoTracking()
+            var item = await _appDbContext
+                .Categories.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.CategoryId == id && x.IsActive);
             if (item is null)
                 return NotFound("Category Not Found or Inactive!");
@@ -92,7 +101,9 @@ public class CategoryController : ControllerBase
             _appDbContext.Entry(item).State = EntityState.Modified;
             int result = await _appDbContext.SaveChangesAsync();
 
-            return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
+            return result > 0
+                ? StatusCode(202, "Updating Successful!")
+                : BadRequest("Updating Fail!");
         }
         catch (Exception ex)
         {
@@ -113,8 +124,8 @@ public class CategoryController : ControllerBase
             if (id <= 0)
                 return BadRequest();
 
-            var item = await _appDbContext.Categories
-                .AsNoTracking()
+            var item = await _appDbContext
+                .Categories.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.CategoryId == id && x.IsActive);
             if (item is null)
                 return NotFound("Category Not Found or Inactive!");
@@ -123,7 +134,9 @@ public class CategoryController : ControllerBase
             _appDbContext.Entry(item).State = EntityState.Modified;
             int result = await _appDbContext.SaveChangesAsync();
 
-            return result > 0 ? StatusCode(202, "Deleting Successful!") : BadRequest("Deleting Fail!");
+            return result > 0
+                ? StatusCode(202, "Deleting Successful!")
+                : BadRequest("Deleting Fail!");
         }
         catch (Exception ex)
         {
