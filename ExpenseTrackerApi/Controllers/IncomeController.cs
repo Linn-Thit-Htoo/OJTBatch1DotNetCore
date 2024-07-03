@@ -1,9 +1,9 @@
-﻿using ExpenseTrackerApi.Models.RequestModels.Income;
+﻿using System.Data.SqlClient;
+using ExpenseTrackerApi.Models.RequestModels.Income;
 using ExpenseTrackerApi.Models.ResponseModels.Income;
 using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -23,11 +23,11 @@ public class IncomeController : ControllerBase
         try
         {
             string query = IncomeQuery.GetIncomeListQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", true)
-            };
-            List<IncomeResponseModel> lst = _adoDotNetService.Query<IncomeResponseModel>(query, parameters.ToArray());
+            List<SqlParameter> parameters = new() { new SqlParameter("@IsActive", true) };
+            List<IncomeResponseModel> lst = _adoDotNetService.Query<IncomeResponseModel>(
+                query,
+                parameters.ToArray()
+            );
 
             return Ok(lst);
         }
@@ -47,12 +47,12 @@ public class IncomeController : ControllerBase
                 return BadRequest("User Id cannot be empty.");
 
             string query = IncomeQuery.GetIncomeListByUserIdQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@UserId", userID),
-                new SqlParameter("@IsActive", true)
-            };
-            List<IncomeResponseModel> lst = _adoDotNetService.Query<IncomeResponseModel>(query, parameters.ToArray());
+            List<SqlParameter> parameters =
+                new() { new SqlParameter("@UserId", userID), new SqlParameter("@IsActive", true) };
+            List<IncomeResponseModel> lst = _adoDotNetService.Query<IncomeResponseModel>(
+                query,
+                parameters.ToArray()
+            );
 
             return Ok(lst);
         }
@@ -68,18 +68,23 @@ public class IncomeController : ControllerBase
     {
         try
         {
-            if (requestModel.IncomeCategoryId == 0 || requestModel.Amount == 0 || requestModel.UserId == 0)
+            if (
+                requestModel.IncomeCategoryId == 0
+                || requestModel.Amount == 0
+                || requestModel.UserId == 0
+            )
                 return BadRequest();
 
-            string query =IncomeQuery.CreateIncomeQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IncomeCategoryId", requestModel.IncomeCategoryId),
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@Amount", requestModel.Amount),
-                new SqlParameter("@CreateDate", DateTime.Now),
-                new SqlParameter("@IsActive", true)
-            };
+            string query = IncomeQuery.CreateIncomeQuery();
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@IncomeCategoryId", requestModel.IncomeCategoryId),
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@Amount", requestModel.Amount),
+                    new SqlParameter("@CreateDate", DateTime.Now),
+                    new SqlParameter("@IsActive", true)
+                };
             int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Income Created!") : BadRequest("Creating Fail!");
@@ -96,17 +101,23 @@ public class IncomeController : ControllerBase
     {
         try
         {
-            if (requestModel.IncomeCategoryId == 0 || requestModel.Amount == 0 || id == 0 || requestModel.UserId == 0)
+            if (
+                requestModel.IncomeCategoryId == 0
+                || requestModel.Amount == 0
+                || id == 0
+                || requestModel.UserId == 0
+            )
                 return BadRequest();
 
             string query = IncomeQuery.UpdateIncomeQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IncomeId", id),
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@IncomeCategoryId", requestModel.IncomeCategoryId),
-                new SqlParameter("@Amount", requestModel.Amount)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@IncomeId", id),
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@IncomeCategoryId", requestModel.IncomeCategoryId),
+                    new SqlParameter("@Amount", requestModel.Amount)
+                };
             int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Income Updated!") : BadRequest("Updating Fail!");
@@ -124,11 +135,8 @@ public class IncomeController : ControllerBase
         try
         {
             string query = IncomeQuery.DeleteIncomeQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", false),
-                new SqlParameter("@IncomeId", id)
-            };
+            List<SqlParameter> parameters =
+                new() { new SqlParameter("@IsActive", false), new SqlParameter("@IncomeId", id) };
             int result = _adoDotNetService.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Income Deleted!") : BadRequest("Deleting Fail!");
