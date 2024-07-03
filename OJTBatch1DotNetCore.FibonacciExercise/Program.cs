@@ -14,7 +14,7 @@ public class Program
             if (i == 1)
             {
                 Console.Write($"{firstNum}, {secondNum}, {sum}, "); // 0, 1, 1
-                                                                    //Console.Write($"{firstNum}, {secondNum}, {sum} "); // 0, 1, 1
+                //Console.Write($"{firstNum}, {secondNum}, {sum} "); // 0, 1, 1
             }
             else
             {
