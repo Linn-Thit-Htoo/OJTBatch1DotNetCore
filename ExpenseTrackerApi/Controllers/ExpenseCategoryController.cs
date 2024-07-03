@@ -1,10 +1,10 @@
-﻿using ExpenseTrackerApi.Models.Entities;
+﻿using System.Data;
+using System.Data.SqlClient;
+using ExpenseTrackerApi.Models.Entities;
 using ExpenseTrackerApi.Models.RequestModels.ExpenseCategory;
 using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -26,11 +26,11 @@ public class ExpenseCategoryController : ControllerBase
         try
         {
             string query = ExpenseCategoryQuery.GetExpenseCategoryListQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", true)
-            };
-            List<ExpenseCategoryModel> lst = _service.Query<ExpenseCategoryModel>(query, parameters.ToArray());
+            List<SqlParameter> parameters = new() { new SqlParameter("@IsActive", true) };
+            List<ExpenseCategoryModel> lst = _service.Query<ExpenseCategoryModel>(
+                query,
+                parameters.ToArray()
+            );
 
             return Ok(lst);
         }
@@ -50,24 +50,28 @@ public class ExpenseCategoryController : ControllerBase
                 return BadRequest("Category name cannot be empty.");
 
             string duplicateQuery = ExpenseCategoryQuery.CheckCreateExpenseCategoryDuplicateQuery();
-            List<SqlParameter> duplicateParams = new()
-            {
-                new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
-                new SqlParameter("@IsActive", true)
-            };
+            List<SqlParameter> duplicateParams =
+                new()
+                {
+                    new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
+                    new SqlParameter("@IsActive", true)
+                };
             DataTable dt = _service.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
             if (dt.Rows.Count > 0)
                 return Conflict("Expense Category Name already exists!");
 
             string query = ExpenseCategoryQuery.CreateExpenseCategoryQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
-                new SqlParameter("@IsActive", true)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
+                    new SqlParameter("@IsActive", true)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(201, "Creating Successful!") : BadRequest("Creating Fail!");
+            return result > 0
+                ? StatusCode(201, "Creating Successful!")
+                : BadRequest("Creating Fail!");
         }
         catch (Exception ex)
         {
@@ -77,30 +81,37 @@ public class ExpenseCategoryController : ControllerBase
 
     [HttpPut]
     [Route("/api/expense-category/{id}")]
-    public IActionResult UpdateExpenseCategory([FromBody] ExpenseCategoryRequestModel requestModel, long id)
+    public IActionResult UpdateExpenseCategory(
+        [FromBody] ExpenseCategoryRequestModel requestModel,
+        long id
+    )
     {
         try
         {
             string duplicateQuery = ExpenseCategoryQuery.CheckUpdateExpenseCategoryDuplicateQuery();
-            List<SqlParameter> duplicateParams = new()
-            {
-                new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
-                new SqlParameter("@IsActive", true),
-                new SqlParameter("@ExpenseCategoryId", id)
-            };
+            List<SqlParameter> duplicateParams =
+                new()
+                {
+                    new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
+                    new SqlParameter("@IsActive", true),
+                    new SqlParameter("@ExpenseCategoryId", id)
+                };
             DataTable dt = _service.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
             if (dt.Rows.Count > 0)
                 return Conflict("Expense Category Name already exists.");
 
             string query = ExpenseCategoryQuery.UpdateExpenseCategoryQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
-                new SqlParameter("@ExpenseCategoryId", id)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@ExpenseCategoryName", requestModel.ExpenseCategoryName),
+                    new SqlParameter("@ExpenseCategoryId", id)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
+            return result > 0
+                ? StatusCode(202, "Updating Successful!")
+                : BadRequest("Updating Fail!");
         }
         catch (Exception ex)
         {
@@ -116,24 +127,25 @@ public class ExpenseCategoryController : ControllerBase
         try
         {
             string validateQuery = ExpenseCategoryQuery.CheckExpenseCategoryQuery();
-            List<SqlParameter> validateParams = new()
-            {
-                new SqlParameter("@ExpenseCategoryId", id)
-            };
+            List<SqlParameter> validateParams =
+                new() { new SqlParameter("@ExpenseCategoryId", id) };
             DataTable dt = _service.QueryFirstOrDefault(validateQuery, validateParams.ToArray());
 
             if (dt.Rows.Count > 0)
                 return Conflict("Expense with this category already exists! Cannot delete.");
 
             string query = ExpenseCategoryQuery.DeleteExpenseCategoryQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@ExpenseCategoryId", id),
-                new SqlParameter("@IsActive", false)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@ExpenseCategoryId", id),
+                    new SqlParameter("@IsActive", false)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(202, "Deleting Successful!") : BadRequest("Deleting Fail!");
+            return result > 0
+                ? StatusCode(202, "Deleting Successful!")
+                : BadRequest("Deleting Fail!");
         }
         catch (Exception ex)
         {
