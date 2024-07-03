@@ -1,9 +1,9 @@
-﻿using ExpenseTrackerApi.Models.RequestModels.Expense;
+﻿using System.Data.SqlClient;
+using ExpenseTrackerApi.Models.RequestModels.Expense;
 using ExpenseTrackerApi.Models.ResponseModels.Expense;
 using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -24,7 +24,10 @@ public class ExpenseController : ControllerBase
         {
             string query = ExpenseQuery.GetExpenseListQuery();
             SqlParameter[] sqlParameters = { new SqlParameter("@IsActive", true) };
-            List<ExpenseResponseModel> lst = _service.Query<ExpenseResponseModel>(query, sqlParameters);
+            List<ExpenseResponseModel> lst = _service.Query<ExpenseResponseModel>(
+                query,
+                sqlParameters
+            );
 
             return Ok(lst);
         }
@@ -43,14 +46,13 @@ public class ExpenseController : ControllerBase
             if (userID <= 0)
                 return BadRequest("User Id cannot be empty.");
 
-
             string query = ExpenseQuery.GetExpenseListByUserIdQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@UserId", userID),
-                new SqlParameter("@IsActive", true)
-            };
-            List<ExpenseResponseModel> lst = _service.Query<ExpenseResponseModel>(query, parameters.ToArray());
+            List<SqlParameter> parameters =
+                new() { new SqlParameter("@UserId", userID), new SqlParameter("@IsActive", true) };
+            List<ExpenseResponseModel> lst = _service.Query<ExpenseResponseModel>(
+                query,
+                parameters.ToArray()
+            );
 
             return Ok(lst);
         }
@@ -66,18 +68,23 @@ public class ExpenseController : ControllerBase
     {
         try
         {
-            if (requestModel.ExpenseCategoryId == 0 || requestModel.Amount == 0 || requestModel.UserId == 0)
+            if (
+                requestModel.ExpenseCategoryId == 0
+                || requestModel.Amount == 0
+                || requestModel.UserId == 0
+            )
                 return BadRequest();
 
             string query = ExpenseQuery.CreateExpenseQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@ExpenseCategoryId", requestModel.ExpenseCategoryId),
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@Amount", requestModel.Amount),
-                new SqlParameter("@CreateDate", DateTime.Now),
-                new SqlParameter("@IsActive", true),
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@ExpenseCategoryId", requestModel.ExpenseCategoryId),
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@Amount", requestModel.Amount),
+                    new SqlParameter("@CreateDate", DateTime.Now),
+                    new SqlParameter("@IsActive", true),
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Expense Created!") : BadRequest("Creating Fail!");
@@ -94,18 +101,24 @@ public class ExpenseController : ControllerBase
     {
         try
         {
-            if (requestModel.ExpenseCategoryId == 0 || requestModel.Amount == 0 || id == 0 || requestModel.UserId == 0)
+            if (
+                requestModel.ExpenseCategoryId == 0
+                || requestModel.Amount == 0
+                || id == 0
+                || requestModel.UserId == 0
+            )
                 return BadRequest();
 
             string query = ExpenseQuery.UpdateExpenseQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@ExpenseId", id),
-                new SqlParameter("@UserId", requestModel.UserId),
-                new SqlParameter("@ExpenseCategoryId", requestModel.ExpenseCategoryId),
-                new SqlParameter("@Amount", requestModel.Amount),
-                new SqlParameter("@IsActive", requestModel.Amount)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@ExpenseId", id),
+                    new SqlParameter("@UserId", requestModel.UserId),
+                    new SqlParameter("@ExpenseCategoryId", requestModel.ExpenseCategoryId),
+                    new SqlParameter("@Amount", requestModel.Amount),
+                    new SqlParameter("@IsActive", requestModel.Amount)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Expense Updated!") : BadRequest("Updating Fail!");
@@ -126,11 +139,8 @@ public class ExpenseController : ControllerBase
                 return BadRequest();
 
             string query = ExpenseQuery.DeleteExpenseQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", false),
-                new SqlParameter("@ExpenseId", id)
-            };
+            List<SqlParameter> parameters =
+                new() { new SqlParameter("@IsActive", false), new SqlParameter("@ExpenseId", id) };
             int result = _service.Execute(query, parameters.ToArray());
 
             return result > 0 ? StatusCode(201, "Income Deleted!") : BadRequest("Deleting Fail!");
