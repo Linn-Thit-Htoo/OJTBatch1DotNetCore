@@ -1,10 +1,10 @@
-﻿using ExpenseTrackerApi.Models.Entities;
+﻿using System.Data;
+using System.Data.SqlClient;
+using ExpenseTrackerApi.Models.Entities;
 using ExpenseTrackerApi.Models.RequestModels.IncomeCategory;
 using ExpenseTrackerApi.Queries;
 using ExpenseTrackerApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace ExpenseTrackerApi.Controllers;
 
@@ -24,11 +24,11 @@ public class IncomeCategoryController : ControllerBase
         try
         {
             string query = IncomeCategoryQuery.GetIncomeCategoryListQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", true)
-            };
-            List<IncomeCategoryModel> lst = _service.Query<IncomeCategoryModel>(query, parameters.ToArray());
+            List<SqlParameter> parameters = new() { new SqlParameter("@IsActive", true) };
+            List<IncomeCategoryModel> lst = _service.Query<IncomeCategoryModel>(
+                query,
+                parameters.ToArray()
+            );
 
             return Ok(lst);
         }
@@ -48,24 +48,31 @@ public class IncomeCategoryController : ControllerBase
                 return BadRequest("Category Name cannot be empty.");
 
             string duplicateQuery = IncomeCategoryQuery.CheckCreateIncomeCategoryDuplicateQuery();
-            List<SqlParameter> duplicateParams = new()
-            {
-                new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
-                new SqlParameter("@IsActive", true)
-            };
-            DataTable category = _service.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
+            List<SqlParameter> duplicateParams =
+                new()
+                {
+                    new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
+                    new SqlParameter("@IsActive", true)
+                };
+            DataTable category = _service.QueryFirstOrDefault(
+                duplicateQuery,
+                duplicateParams.ToArray()
+            );
             if (category.Rows.Count > 0)
                 return Conflict("Income Category Name already exists.");
 
             string query = IncomeCategoryQuery.CreateIncomeCategoryQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
-                new SqlParameter("@IsActive", true)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
+                    new SqlParameter("@IsActive", true)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(201, "Income Category Created.") : BadRequest("Creating Fail.");
+            return result > 0
+                ? StatusCode(201, "Income Category Created.")
+                : BadRequest("Creating Fail.");
         }
         catch (Exception ex)
         {
@@ -75,7 +82,10 @@ public class IncomeCategoryController : ControllerBase
 
     [HttpPut]
     [Route("/api/income-category/{id}")]
-    public IActionResult UpdateIncomeCategory([FromBody] IncomeCategoryRequestModel requestModel, long id)
+    public IActionResult UpdateIncomeCategory(
+        [FromBody] IncomeCategoryRequestModel requestModel,
+        long id
+    )
     {
         try
         {
@@ -83,25 +93,29 @@ public class IncomeCategoryController : ControllerBase
                 return BadRequest("Category name cannot be empty.");
 
             string duplicateQuery = IncomeCategoryQuery.CheckIncomeCategoryDuplicateQuery();
-            List<SqlParameter> duplicateParams = new()
-            {
-                new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
-                new SqlParameter("@IsActive", true),
-                new SqlParameter("@IncomeCategoryId", id)
-            };
+            List<SqlParameter> duplicateParams =
+                new()
+                {
+                    new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
+                    new SqlParameter("@IsActive", true),
+                    new SqlParameter("@IncomeCategoryId", id)
+                };
             DataTable dt = _service.QueryFirstOrDefault(duplicateQuery, duplicateParams.ToArray());
             if (dt.Rows.Count > 0)
                 return Conflict("Income Category Name already exists.");
 
             string query = IncomeCategoryQuery.UpdateIncomeCategoryQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
-                new SqlParameter("@IncomeCategoryId", id)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@IncomeCategoryName", requestModel.IncomeCategoryName),
+                    new SqlParameter("@IncomeCategoryId", id)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(202, "Updating Successful!") : BadRequest("Updating Fail!");
+            return result > 0
+                ? StatusCode(202, "Updating Successful!")
+                : BadRequest("Updating Fail!");
         }
         catch (Exception ex)
         {
@@ -127,14 +141,17 @@ public class IncomeCategoryController : ControllerBase
                 return Conflict("Income with this category already exists! Cannot delete.");
 
             string query = IncomeCategoryQuery.DeleteIncomeCategoryQuery();
-            List<SqlParameter> parameters = new()
-            {
-                new SqlParameter("@IsActive", false),
-                new SqlParameter("@IncomeCategoryId", id)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new SqlParameter("@IsActive", false),
+                    new SqlParameter("@IncomeCategoryId", id)
+                };
             int result = _service.Execute(query, parameters.ToArray());
 
-            return result > 0 ? StatusCode(202, "Deleting Successful!") : BadRequest("Deleting Fail!");
+            return result > 0
+                ? StatusCode(202, "Deleting Successful!")
+                : BadRequest("Deleting Fail!");
         }
         catch (Exception ex)
         {
