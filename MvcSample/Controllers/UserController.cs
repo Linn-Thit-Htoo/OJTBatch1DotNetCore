@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MvcSample.Models;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using MvcSample.Models;
 
 namespace MvcSample.Controllers;
 
@@ -24,7 +24,10 @@ public class UserController : Controller
     {
         try
         {
-            if (string.IsNullOrEmpty(dataModel.PhoneNumber) || string.IsNullOrEmpty(dataModel.Password))
+            if (
+                string.IsNullOrEmpty(dataModel.PhoneNumber)
+                || string.IsNullOrEmpty(dataModel.Password)
+            )
             {
                 TempData["fail"] = "Login Fail!";
                 return RedirectToAction("Index");
@@ -32,7 +35,8 @@ public class UserController : Controller
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"SELECT [UserId]
+            string query =
+                @"SELECT [UserId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
