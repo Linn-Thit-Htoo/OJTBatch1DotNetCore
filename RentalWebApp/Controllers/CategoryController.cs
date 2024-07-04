@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
 using RentalWebApp.Models.RequestModels.Category;
 using RentalWebApp.Services;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace RentalWebApp.Controllers;
 
@@ -29,7 +29,8 @@ public class CategoryController : Controller
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"SELECT [CategoryId]
+            string query =
+                @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE IsActive = @IsActive";
@@ -41,7 +42,9 @@ public class CategoryController : Controller
             conn.Close();
 
             string jsonStr = JsonConvert.SerializeObject(dt);
-            List<CategoryDataModel> lst = JsonConvert.DeserializeObject<List<CategoryDataModel>>(jsonStr)!;
+            List<CategoryDataModel> lst = JsonConvert.DeserializeObject<List<CategoryDataModel>>(
+                jsonStr
+            )!;
 
             return View(lst);
         }
@@ -67,15 +70,13 @@ public class CategoryController : Controller
     {
         try
         {
-            string duplicateTestingQuery = @"SELECT [CategoryId]
+            string duplicateTestingQuery =
+                @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE CategoryName = @CategoryName AND IsActive = @IsActive";
-            List<SqlParameter> parameters = new()
-            {
-                new("@CategoryName", requestModel.CategoryName),
-                new("@IsActive", true)
-            };
+            List<SqlParameter> parameters =
+                new() { new("@CategoryName", requestModel.CategoryName), new("@IsActive", true) };
             DataTable category = IsDuplicate(duplicateTestingQuery, parameters.ToArray());
             if (category.Rows.Count > 0)
             {
@@ -84,12 +85,10 @@ public class CategoryController : Controller
             }
 
             // create case
-            string query = @"INSERT INTO Category (CategoryName, IsActive) VALUES (@CategoryName, @IsActive)";
-            List<SqlParameter> createParams = new()
-            {
-                new("@CategoryName", requestModel.CategoryName),
-                new("@IsActive", true)
-            };
+            string query =
+                @"INSERT INTO Category (CategoryName, IsActive) VALUES (@CategoryName, @IsActive)";
+            List<SqlParameter> createParams =
+                new() { new("@CategoryName", requestModel.CategoryName), new("@IsActive", true) };
             int result = DbHelper.Execute(query, createParams.ToArray());
 
             if (result > 0)
@@ -120,7 +119,8 @@ public class CategoryController : Controller
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"SELECT [CategoryId]
+            string query =
+                @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE CategoryId = @CategoryId AND IsActive = @IsActive";
@@ -132,11 +132,12 @@ public class CategoryController : Controller
             adapter.Fill(dt);
             conn.Close();
 
-            CategoryDataModel dataModel = new()
-            {
-                CategoryId = Convert.ToInt64(dt.Rows[0]["CategoryId"]),
-                CategoryName = Convert.ToString(dt.Rows[0]["CategoryName"])!
-            };
+            CategoryDataModel dataModel =
+                new()
+                {
+                    CategoryId = Convert.ToInt64(dt.Rows[0]["CategoryId"]),
+                    CategoryName = Convert.ToString(dt.Rows[0]["CategoryName"])!
+                };
 
             return View(dataModel);
         }
@@ -151,16 +152,18 @@ public class CategoryController : Controller
     {
         try
         {
-            string duplicateTestingQuery = @"SELECT [CategoryId]
+            string duplicateTestingQuery =
+                @"SELECT [CategoryId]
       ,[CategoryName]
       ,[IsActive]
   FROM [dbo].[Category] WHERE CategoryName = @CategoryName AND IsActive = @IsActive AND CategoryId != @CategoryId";
-            List<SqlParameter> parameters = new()
-            {
-                new("@CategoryName", requestModel.CategoryName),
-                new("@IsActive", true),
-                new("@CategoryId", requestModel.CategoryId)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new("@CategoryName", requestModel.CategoryName),
+                    new("@IsActive", true),
+                    new("@CategoryId", requestModel.CategoryId)
+                };
             DataTable category = IsDuplicate(duplicateTestingQuery, parameters.ToArray());
             if (category.Rows.Count > 0)
             {
@@ -169,13 +172,15 @@ public class CategoryController : Controller
             }
 
             // update case
-            string query = @"UPDATE Category SET CategoryName = @CategoryName
+            string query =
+                @"UPDATE Category SET CategoryName = @CategoryName
 WHERE CategoryId = @CategoryId";
-            List<SqlParameter> updateParams = new()
-            {
-                new("@CategoryName", requestModel.CategoryName),
-                new("@CategoryId", requestModel.CategoryId)
-            };
+            List<SqlParameter> updateParams =
+                new()
+                {
+                    new("@CategoryName", requestModel.CategoryName),
+                    new("@CategoryId", requestModel.CategoryId)
+                };
             int result = DbHelper.Execute(query, updateParams.ToArray());
 
             if (result > 0)
@@ -205,7 +210,8 @@ WHERE CategoryId = @CategoryId";
                 return RedirectToAction("LoginPage", "User");
             }
 
-            string query1 = @"SELECT AssetId, CategoryId, AssetName FROM Asset WHERE CategoryId = @CategoryId";
+            string query1 =
+                @"SELECT AssetId, CategoryId, AssetName FROM Asset WHERE CategoryId = @CategoryId";
             DataTable dt1 = DbHelper.Query(query1, new SqlParameter("@CategoryId", id));
             if (dt1.Rows.Count > 0)
             {
@@ -213,13 +219,11 @@ WHERE CategoryId = @CategoryId";
                 return RedirectToAction("CategoryManagement");
             }
 
-            string query = @"UPDATE Category SET IsActive = @IsActive
+            string query =
+                @"UPDATE Category SET IsActive = @IsActive
 WHERE CategoryId = @CategoryId";
-            List<SqlParameter> deleteParams = new()
-            {
-                new("@IsActive", false),
-                new("@CategoryId", id)
-            };
+            List<SqlParameter> deleteParams =
+                new() { new("@IsActive", false), new("@CategoryId", id) };
             int result = DbHelper.Execute(query, deleteParams.ToArray());
 
             if (result > 0)
