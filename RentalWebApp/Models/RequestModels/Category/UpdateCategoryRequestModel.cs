@@ -1,8 +1,7 @@
-﻿namespace RentalWebApp.Models.RequestModels.Category
+﻿namespace RentalWebApp.Models.RequestModels.Category;
+
+public class UpdateCategoryRequestModel
 {
-    public class UpdateCategoryRequestModel
-    {
-        public long CategoryId { get; set; }
-        public string CategoryName { get; set; }
-    }
+    public long CategoryId { get; set; }
+    public string CategoryName { get; set; }
 }
