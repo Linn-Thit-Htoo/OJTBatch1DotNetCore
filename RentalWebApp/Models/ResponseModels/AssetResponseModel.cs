@@ -1,14 +1,13 @@
-﻿namespace RentalWebApp.Models.ResponseModels
+﻿namespace RentalWebApp.Models.ResponseModels;
+
+public class AssetResponseModel
 {
-    public class AssetResponseModel
-    {
-        public long AssetId { get; set; }
-        public string CategoryName { get; set; }
-        public string AssetCode { get; set; }
-        public string AssetName { get; set; }
-        public string AssetStatus { get; set; }
-        public int Quantity { get; set; }
-        public DateTime CreateDate { get; set; }
-        public bool IsActive { get; set; }
-    }
+    public long AssetId { get; set; }
+    public string CategoryName { get; set; }
+    public string AssetCode { get; set; }
+    public string AssetName { get; set; }
+    public string AssetStatus { get; set; }
+    public int Quantity { get; set; }
+    public DateTime CreateDate { get; set; }
+    public bool IsActive { get; set; }
 }
