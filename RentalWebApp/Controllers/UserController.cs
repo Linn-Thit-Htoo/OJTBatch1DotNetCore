@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
 using RentalWebApp.Models.RequestModels.User;
 using RentalWebApp.Models.ResponseModels;
 using RentalWebApp.Services;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace RentalWebApp.Controllers;
 
@@ -29,7 +29,8 @@ public class UserController : Controller
     {
         try
         {
-            string query = @"SELECT [UserId]
+            string query =
+                @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
@@ -37,13 +38,14 @@ public class UserController : Controller
       ,[IsActive]
   FROM [dbo].[Users] WHERE PhoneNumber = @PhoneNumber AND Password = @Password AND UserRole = @UserRole AND
 IsActive = @IsActive";
-            List<SqlParameter> parameters = new()
-            {
-                new("@PhoneNumber", requestModel.PhoneNumber),
-                new("@Password", requestModel.Password),
-                new("@UserRole", "admin"),
-                new("@IsActive", true)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new("@PhoneNumber", requestModel.PhoneNumber),
+                    new("@Password", requestModel.Password),
+                    new("@UserRole", "admin"),
+                    new("@IsActive", true)
+                };
             DataTable user = DbHelper.Query(query, parameters.ToArray());
             if (user.Rows.Count == 0)
             {
@@ -72,7 +74,8 @@ IsActive = @IsActive";
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"SELECT [UserId]
+            string query =
+                @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
@@ -87,7 +90,9 @@ IsActive = @IsActive";
             conn.Close();
 
             string jsonStr = JsonConvert.SerializeObject(dt); // convert to json
-            List<UserResponseModel> lst = JsonConvert.DeserializeObject<List<UserResponseModel>>(jsonStr)!;
+            List<UserResponseModel> lst = JsonConvert.DeserializeObject<List<UserResponseModel>>(
+                jsonStr
+            )!;
 
             return View(lst);
         }
@@ -126,18 +131,16 @@ IsActive = @IsActive";
                 return RedirectToAction("UserManagement");
             }
 
-            string duplicateTestingQuery = @"SELECT [UserId]
+            string duplicateTestingQuery =
+                @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE IsActive = @IsActive AND MemberId = @MemberId";
-            List<SqlParameter> sqlParameters = new()
-            {
-                 new("@IsActive", true),
-                 new("@MemberId", dataModel.MemberId)
-            };
+            List<SqlParameter> sqlParameters =
+                new() { new("@IsActive", true), new("@MemberId", dataModel.MemberId) };
             DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
 
             if (user.Rows.Count > 0)
@@ -154,7 +157,8 @@ IsActive = @IsActive";
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"INSERT INTO Users (MemberId, UserName, PhoneNumber, UserRole, IsActive)
+            string query =
+                @"INSERT INTO Users (MemberId, UserName, PhoneNumber, UserRole, IsActive)
 VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
             SqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@MemberId", dataModel.MemberId);
@@ -171,7 +175,7 @@ VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
                 return RedirectToAction("UserManagement");
             }
 
-        Fail:
+            Fail:
             TempData["error"] = "Please fill all fields...";
             return RedirectToAction("UserManagement");
         }
@@ -193,7 +197,8 @@ VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"SELECT [UserId]
+            string query =
+                @"SELECT [UserId]
       ,[UserName]
       ,[MemberId]
       ,[PhoneNumber]
@@ -230,19 +235,21 @@ VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
                 return RedirectToAction("UserManagement");
             }
 
-            string duplicateTestingQuery = @"SELECT [UserId]
+            string duplicateTestingQuery =
+                @"SELECT [UserId]
       ,[MemberId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
       ,[IsActive]
   FROM [dbo].[Users] WHERE IsActive = @IsActive AND MemberId = @MemberId AND UserId != @UserId";
-            List<SqlParameter> sqlParameters = new()
-            {
-                 new("@IsActive", true),
-                 new("@MemberId", requestModel.MemberId),
-                 new("@UserId", requestModel.UserId)
-            };
+            List<SqlParameter> sqlParameters =
+                new()
+                {
+                    new("@IsActive", true),
+                    new("@MemberId", requestModel.MemberId),
+                    new("@UserId", requestModel.UserId)
+                };
             DataTable user = DbHelper.Query(duplicateTestingQuery, sqlParameters.ToArray());
 
             if (user.Rows.Count > 0)
@@ -253,7 +260,8 @@ VALUES(@MemberId, @UserName, @PhoneNumber, @UserRole, @IsActive)";
 
             SqlConnection conn = new(_configuration.GetConnectionString("DbConnection"));
             conn.Open();
-            string query = @"UPDATE Users SET UserName = @UserName, PhoneNumber = @PhoneNumber
+            string query =
+                @"UPDATE Users SET UserName = @UserName, PhoneNumber = @PhoneNumber
 WHERE UserId = @UserId AND IsActive = @IsActive";
             SqlCommand cmd = new(query, conn);
             cmd.Parameters.AddWithValue("@UserId", requestModel.UserId);
@@ -284,7 +292,6 @@ WHERE UserId = @UserId AND IsActive = @IsActive";
     {
         try
         {
-
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("name")))
             {
                 TempData["error"] = "Please login first!";
@@ -327,7 +334,8 @@ WHERE UserId = @UserId AND IsActive = @IsActive";
             // create case
             if (id == 0)
             {
-                query = @"SELECT [UserId]
+                query =
+                    @"SELECT [UserId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
@@ -336,7 +344,8 @@ WHERE UserId = @UserId AND IsActive = @IsActive";
             }
             else
             {
-                query = @"SELECT [UserId]
+                query =
+                    @"SELECT [UserId]
       ,[UserName]
       ,[PhoneNumber]
       ,[UserRole]
