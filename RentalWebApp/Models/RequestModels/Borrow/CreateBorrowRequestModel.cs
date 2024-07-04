@@ -1,9 +1,8 @@
-﻿namespace RentalWebApp.Models.RequestModels.Borrow
+﻿namespace RentalWebApp.Models.RequestModels.Borrow;
+
+public class CreateBorrowRequestModel
 {
-    public class CreateBorrowRequestModel
-    {
-        public string MemberId { get; set; }
-        public string AssetCode { get; set; }
-        public string ReturnDate { get; set; }
-    }
+    public string MemberId { get; set; }
+    public string AssetCode { get; set; }
+    public string ReturnDate { get; set; }
 }
