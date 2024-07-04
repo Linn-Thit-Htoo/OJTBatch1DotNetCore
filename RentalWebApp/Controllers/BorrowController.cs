@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using System.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RentalWebApp.Models.Entities;
 using RentalWebApp.Models.RequestModels.Borrow;
 using RentalWebApp.Models.ResponseModels;
 using RentalWebApp.Services;
-using System.Data;
-using System.Data.SqlClient;
 
 namespace RentalWebApp.Controllers;
 
@@ -28,7 +28,8 @@ public class BorrowController : Controller
                 return RedirectToAction("LoginPage", "User");
             }
 
-            string query = @"SELECT BorrowId, BorrowDate, ReturnDate, Users.MemberId, Users.UserName, 
+            string query =
+                @"SELECT BorrowId, BorrowDate, ReturnDate, Users.MemberId, Users.UserName, 
 Asset.AssetCode, Asset.AssetName, Asset.AssetStatus, Category.CategoryName
 FROM Borrow
 INNER JOIN Users ON Borrow.UserId = Users.UserId
@@ -36,13 +37,12 @@ INNER JOIN Asset ON Borrow.AssetId = Asset.AssetId
 INNER JOIN Category ON Asset.CategoryId = Category.CategoryId
 WHERE Borrow.IsActive = @IsActive
 ORDER BY Borrow.BorrowId DESC";
-            List<SqlParameter> parameters = new()
-            {
-                new("@IsActive", true)
-            };
+            List<SqlParameter> parameters = new() { new("@IsActive", true) };
             DataTable dt = DbHelper.Query(query, parameters.ToArray());
             string jsonStr = JsonConvert.SerializeObject(dt);
-            List<BorrowResponseModel> lst = JsonConvert.DeserializeObject<List<BorrowResponseModel>>(jsonStr)!;
+            List<BorrowResponseModel> lst = JsonConvert.DeserializeObject<
+                List<BorrowResponseModel>
+            >(jsonStr)!;
 
             return View(lst);
         }
@@ -71,7 +71,8 @@ ORDER BY Borrow.BorrowId DESC";
         SqlTransaction transaction = conn.BeginTransaction();
         try
         {
-            string userFetchQuery = @"SELECT [UserId]
+            string userFetchQuery =
+                @"SELECT [UserId]
   FROM [dbo].[Users] WHERE MemberId = @MemberId AND IsActive = @IsActive";
             SqlCommand userFetchCmd = new(userFetchQuery, conn);
             userFetchCmd.Transaction = transaction;
@@ -87,8 +88,8 @@ ORDER BY Borrow.BorrowId DESC";
             }
             long userID = Convert.ToInt64(userDt.Rows[0]["UserId"]);
 
-
-            string assetFetchQuery = @"SELECT AssetId, Quantity
+            string assetFetchQuery =
+                @"SELECT AssetId, Quantity
   FROM [dbo].[Asset] WHERE AssetCode = @AssetCode AND IsActive = @IsActive";
             SqlCommand assetCmd = new(assetFetchQuery, conn);
             assetCmd.Transaction = transaction;
@@ -106,22 +107,18 @@ ORDER BY Borrow.BorrowId DESC";
             int quantity = Convert.ToInt32(asset.Rows[0]["Quantity"]);
 
             // reduce
-            string reduceQuantityQuery = @"UPDATE Asset SET Quantity = @Quantity WHERE AssetId = @AssetId";
-            SqlCommand cmd = new(reduceQuantityQuery, conn)
-            {
-                Transaction = transaction
-            };
+            string reduceQuantityQuery =
+                @"UPDATE Asset SET Quantity = @Quantity WHERE AssetId = @AssetId";
+            SqlCommand cmd = new(reduceQuantityQuery, conn) { Transaction = transaction };
             cmd.Parameters.AddWithValue("@Quantity", quantity - 1);
             cmd.Parameters.AddWithValue("@AssetId", assetID);
             int result = cmd.ExecuteNonQuery();
 
             // insert case
-            string insertQuery = @"INSERT INTO Borrow (UserId, AssetId, BorrowDate, ReturnDate, IsActive)
+            string insertQuery =
+                @"INSERT INTO Borrow (UserId, AssetId, BorrowDate, ReturnDate, IsActive)
 VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
-            SqlCommand insertCmd = new(insertQuery, conn)
-            {
-                Transaction = transaction
-            };
+            SqlCommand insertCmd = new(insertQuery, conn) { Transaction = transaction };
             insertCmd.Parameters.AddWithValue("@UserId", userID);
             insertCmd.Parameters.AddWithValue("@AssetId", assetID);
             insertCmd.Parameters.AddWithValue("@BorrowDate", DateTime.Now);
@@ -157,18 +154,15 @@ VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
                 return RedirectToAction("LoginPage", "User");
             }
 
-            string query = @"SELECT [BorrowId]
+            string query =
+                @"SELECT [BorrowId]
       ,[UserId]
       ,[AssetId]
       ,[BorrowDate]
       ,[ReturnDate]
       ,[IsActive]
   FROM [dbo].[Borrow] WHERE IsActive = @IsActive AND BorrowId = @BorrowId";
-            List<SqlParameter> parameters = new()
-            {
-                new("@IsActive", true),
-                new("@BorrowId", id)
-            };
+            List<SqlParameter> parameters = new() { new("@IsActive", true), new("@BorrowId", id) };
 
             DataTable dt = DbHelper.Query(query, parameters.ToArray());
 
@@ -178,11 +172,12 @@ VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
                 return RedirectToAction("BorrowManagement");
             }
 
-            BorrowDataModel borrow = new()
-            {
-                BorrowId = Convert.ToInt64(dt.Rows[0]["BorrowId"]),
-                ReturnDate = Convert.ToString(dt.Rows[0]["ReturnDate"])!
-            };
+            BorrowDataModel borrow =
+                new()
+                {
+                    BorrowId = Convert.ToInt64(dt.Rows[0]["BorrowId"]),
+                    ReturnDate = Convert.ToString(dt.Rows[0]["ReturnDate"])!
+                };
 
             return View(borrow);
         }
@@ -198,11 +193,12 @@ VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
         try
         {
             string query = @"UPDATE Borrow SET ReturnDate = @ReturnDate WHERE BorrowId = @BorrowId";
-            List<SqlParameter> parameters = new()
-            {
-                new("@BorrowId", requestModel.BorrowId),
-                new("@ReturnDate", requestModel.ReturnDate)
-            };
+            List<SqlParameter> parameters =
+                new()
+                {
+                    new("@BorrowId", requestModel.BorrowId),
+                    new("@ReturnDate", requestModel.ReturnDate)
+                };
             int result = DbHelper.Execute(query, parameters.ToArray());
 
             if (result > 0)
@@ -233,11 +229,7 @@ VALUES (@UserId, @AssetId, @BorrowDate, @ReturnDate, @IsActive)";
             }
 
             string query = @"UPDATE Borrow SET IsActive = @IsActive WHERE BorrowId = @BorrowId";
-            List<SqlParameter> parameters = new()
-            {
-                new("@IsActive", false),
-                new("@BorrowId", id)
-            };
+            List<SqlParameter> parameters = new() { new("@IsActive", false), new("@BorrowId", id) };
             int result = DbHelper.Execute(query, parameters.ToArray());
 
             if (result > 0)
