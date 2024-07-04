@@ -1,8 +1,7 @@
-﻿namespace RentalWebApp.Models.RequestModels.Borrow
+﻿namespace RentalWebApp.Models.RequestModels.Borrow;
+
+public class UpdateBorrowRequestModel
 {
-    public class UpdateBorrowRequestModel
-    {
-        public long BorrowId { get; set; }
-        public string ReturnDate { get; set; }
-    }
+    public long BorrowId { get; set; }
+    public string ReturnDate { get; set; }
 }
