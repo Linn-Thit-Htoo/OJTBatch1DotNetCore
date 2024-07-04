@@ -1,7 +1,6 @@
-﻿namespace RentalWebApp.Models.RequestModels.Category
+﻿namespace RentalWebApp.Models.RequestModels.Category;
+
+public class CreateCategoryRequestModel
 {
-    public class CreateCategoryRequestModel
-    {
-        public string CategoryName { get; set; }
-    }
+    public string CategoryName { get; set; }
 }
