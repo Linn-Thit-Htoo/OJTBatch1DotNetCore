@@ -4,11 +4,13 @@ using OJTBatch1DotNetCore.ConeAppHttpClientExample;
 public class Program
 {
     public static string _blogURL = "https://ojtbatch1.bsite.net/api/Blog";
+
     public static async Task Main(string[] args)
     {
         await FetchData();
     }
-    private async static Task FetchData()
+
+    private static async Task FetchData()
     {
         // http client (axios or fetch)
         HttpClient client = new();
